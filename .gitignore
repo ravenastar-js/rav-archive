@@ -6,4 +6,4 @@ node_modules/
 DADOS/*
 
 # Pasta DOCS - ignora todos os arquivos, mas mantém a pasta
-docs/*
+DOCS/*
