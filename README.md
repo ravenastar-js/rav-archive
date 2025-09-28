@@ -79,11 +79,6 @@ BANNER INSPIRADO EM
 
 - [COMO INSTALAR NODE JS NO WINDOWS?](https://youtu.be/-jft_9PlffQ)
 
-<video width="600" controls>
-  <source src="assets/NodeJS.mp4" type="video/mp4">
-  Seu navegador não suporta vídeo.
-</video>
-
 </details>
 
 ---
@@ -116,7 +111,7 @@ BANNER INSPIRADO EM
 4. **Aguarde o processamento**
    - O script é 100% automático
    - Progresso visível no terminal
-   - Resultados salvos na pasta `DADOS/`
+   - Resultados salvos na pasta `DADOS/` e `DOCS/`
 
 > **💡 Dica:** Todas as dependências são instaladas automaticamente na primeira execução.
 
@@ -139,7 +134,7 @@ BANNER INSPIRADO EM
 - 📈 Progresso em tempo real
 - 📋 Resultados estruturados em JSON
 - 🎯 Relatórios com timestamp
-- 📄 Relatório final é gerado em `.txt` na pasta `DOCS`
+- 📄 Relatório final é gerado em `.txt` na pasta `DOCS/`
 
 ---
 
