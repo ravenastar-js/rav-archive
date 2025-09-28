@@ -10,7 +10,7 @@
 [![🕒 Last Commit](https://img.shields.io/github/last-commit/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%95%92%20Last%20Commit&color=2d7445&logo=clock&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/commits/all)
 [![🐞 Issues](https://img.shields.io/github/issues/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%90%9E%20Issues&color=2d7445&logo=bug&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/issues)
 [![📦 Repo Size](https://img.shields.io/github/repo-size/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%93%A6%20Repo%20Size&color=2d7445&logo=database&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive)
-[![⚙️ Node.js](https://img.shields.io/badge/%E2%9A%99%EF%B8%8F%20Node.js-16.0%2B-green?style=for-the-badge&logo=nodedotjs&color=2d7445&logoColor=white&labelColor=444&radius=10)](https://nodejs.org/)
+[![⚙️ Node.js](https://img.shields.io/badge/%E2%9A%99%EF%B8%8F%20Node.js-16.0%2B-green?style=for-the-badge&logo=nodedotjs&color=2d7445&logoColor=white&labelColor=444&radius=10)](https://nodejs.org/pt/download)
 [![🎭 Playwright](https://img.shields.io/badge/%F0%9F%8E%AD%20Playwright-Latest-blue?style=for-the-badge&logo=playwright&color=2d7445&logoColor=white&labelColor=444&radius=10)](https://playwright.dev/)
 [![🖥️ Platform](https://img.shields.io/badge/%F0%9F%96%A5%EF%B8%8F%20Platform-Windows-blue?style=for-the-badge&logo=windows&color=2d7445&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/wintools)
 
