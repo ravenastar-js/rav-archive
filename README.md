@@ -95,12 +95,12 @@ BANNER INSPIRADO EM
 1. **Baixe o projeto como ZIP**
    - Link direto:
      ```
-     https://github.com/ravenastar-js/rav-archive/archive/refs/heads/main.zip
+     https://github.com/ravenastar-js/rav-archive/archive/refs/heads/save.zip
      ```
 
    - Ou via CMD (sem Git), usando `curl`:
      ```
-     curl -L -o rav-archive.zip https://github.com/ravenastar-js/rav-archive/archive/refs/heads/main.zip
+     curl -L -o rav-archive.zip https://github.com/ravenastar-js/rav-archive/archive/refs/heads/save.zip
      ```
 
 2. **Extraia o conteúdo**
@@ -160,7 +160,7 @@ BANNER INSPIRADO EM
 ## 📁 Estrutura de Arquivos
 
 ```
-📁 rav-archive/
+📁 rav-archive-save/
 ├── 📄 archive.js                    # [OBRIGATÓRIO]
 ├── 📦 package.json                  # [OBRIGATÓRIO]
 ├── 📖 README.md                     # [OPCIONAL]
