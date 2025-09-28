@@ -71,6 +71,21 @@ BANNER INSPIRADO EM
 </details>
 
 ---
+## ✨ FAQ
+
+<details>
+<summary><strong>📥 Como instalar o NodeJS?</strong></summary>
+
+- [COMO INSTALAR NODE JS NO WINDOWS?](https://youtu.be/-jft_9PlffQ)
+
+<video width="600" controls>
+  <source src="assets/NodeJS.mp4" type="video/mp4">
+  Seu navegador não suporta vídeo.
+</video>
+
+</details>
+
+---
 
 ## 🚀 Como Usar
 
