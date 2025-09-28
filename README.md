@@ -83,7 +83,7 @@ BANNER INSPIRADO EM
 <details>
 <summary>📥 Como baixar e executar o Rav Archive?</summary>
 
-![RavArchive](https://i.imgur.com/hLh76om.gif)
+<img src="RavArchive.gif" alt="Baixando e executando o Rav Archive"/>
 </details>
 
 ---
