@@ -87,5 +87,6 @@ echo    INICIANDO RAV ARCHIVE 🚀
 echo ========================================
 echo.
 
-node archive.js
+node "%SCRIPT_DIR%archive.js"
+
 pause
