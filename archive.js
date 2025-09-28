@@ -123,7 +123,7 @@ class AutoInstaller {
 class SmartArchiveChecker {
     constructor() {
         this.dataDir = 'DADOS';
-        this.docsDir = 'docs';
+        this.docsDir = 'DOCS';
         this.connectionManager = new ConnectionManager();
         this.results = {
             metadata: {

@@ -124,6 +124,7 @@ BANNER INSPIRADO EM
 - 📈 Progresso em tempo real
 - 📋 Resultados estruturados em JSON
 - 🎯 Relatórios com timestamp
+- 📄 Relatório final é gerado em `.txt` na pasta `DOCS`
 
 ---
 
@@ -136,7 +137,7 @@ BANNER INSPIRADO EM
 ├── 📖 README.md                     # [OPCIONAL]
 ├── ⚡ iniciar.bat                   # [EXECUTÁVEL]
 ├── 📝 links.txt                     # [EDITÁVEL]
-├── 📁 docs/                         # [OBRIGATÓRIO]
+├── 📁 DOCS/                         # [OBRIGATÓRIO]
 │   └── 📄 relatorio_[data].txt      # [GERADO AUTOMATICAMENTE]
 └── 📁 DADOS/                        # [OBRIGATÓRIO]
     ├── 📊 progress_log.json         # [GERADO AUTOMATICAMENTE]
