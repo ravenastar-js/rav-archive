@@ -166,13 +166,11 @@ BANNER INSPIRADO EM
 ├── 📖 README.md                     # [OPCIONAL]
 ├── ⚡ iniciar.bat                   # [EXECUTÁVEL]
 ├── 📝 links.txt                     # [EDITÁVEL]
+├── 🖼️ RavArchive.gif                # [OPCIONAL]
 ├── 📁 DOCS/                         # [OBRIGATÓRIO]
 │   └── 📄 relatorio_[data].txt      # [GERADO AUTOMATICAMENTE]
 └── 📁 DADOS/                        # [OBRIGATÓRIO]
-    ├── 📊 progress_log.json         # [GERADO AUTOMATICAMENTE]
-    ├── 📋 archive_results.json      # [GERADO AUTOMATICAMENTE]
-    └── 📈 final_report_[data].json  # [GERADO AUTOMATICAMENTE]
-
+    └── 📋 archive_results.json      # [GERADO AUTOMATICAMENTE]
 ```
 
 ---
