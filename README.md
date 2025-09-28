@@ -167,10 +167,14 @@ BANNER INSPIRADO EM
 ├── ⚡ iniciar.bat                   # [EXECUTÁVEL]
 ├── 📝 links.txt                     # [EDITÁVEL]
 ├── 🖼️ RavArchive.gif                # [OPCIONAL]
-├── 📁 DOCS/                         # [OBRIGATÓRIO]
+├── 📁 core/                         # [OBRIGATÓRIO]
+│   ├── 📄 AutoInstaller.js          # [OBRIGATÓRIO]
+│   ├── 📄 ConnectionManager.js      # [OBRIGATÓRIO]
+│   └── 📄 SmartArchiveChecker.js    # [OBRIGATÓRIO]
+├── 📁 DOCS/                         # [GERADO AUTOMATICAMENTE]
 │   └── 📄 relatorio_[data].txt      # [GERADO AUTOMATICAMENTE]
-└── 📁 DADOS/                        # [OBRIGATÓRIO]
-    └── 📋 archive_results.json      # [GERADO AUTOMATICAMENTE]
+└── 📁 DADOS/                        # [GERADO AUTOMATICAMENTE]
+    └── 📄 archive_results.json      # [GERADO AUTOMATICAMENTE]
 ```
 
 ---
