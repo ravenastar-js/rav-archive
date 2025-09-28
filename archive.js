@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { execSync} = require('child_process');
+const { execSync } = require('child_process');
 const path = require('path');
 const { URL } = require('url');
 const readline = require('readline');
@@ -12,7 +12,7 @@ class ConnectionManager {
 
     async checkConnection() {
         console.log('🌐 Verificando conexão de internet...');
-        
+
         try {
             execSync('ping -n 1 8.8.8.8', { stdio: 'ignore' });
             console.log('✅ Conexão de internet detectada');
@@ -34,7 +34,7 @@ class ConnectionManager {
         console.log('   • Faça o dowload em: https://protonvpn.com/download');
         console.log('');
         console.log('═'.repeat(70));
-        
+
         const rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout
@@ -50,15 +50,15 @@ class ConnectionManager {
 
     async initializeConnection() {
         console.log('🔗 INICIANDO SISTEMA DE CONEXÃO...');
-        
+
         await this.showVPNWarning();
-        
+
         const isConnected = await this.checkConnection();
         if (!isConnected) {
             console.log('❌ Sem conexão de internet. Verifique sua rede.');
             process.exit(1);
         }
-        
+
         console.log('⚡ Conexão estabelecida');
         return true;
     }
@@ -133,7 +133,7 @@ class SmartArchiveChecker {
             },
             results: { archived: [], failed: [] }
         };
-        
+
         this.config = {
             browser: {
                 headless: true,
@@ -170,7 +170,7 @@ class SmartArchiveChecker {
             },
             archives: {}
         };
-        
+
         this.ensureDataDirectory();
         this.cleanupRedundantFiles();
     }
@@ -186,9 +186,9 @@ class SmartArchiveChecker {
         try {
             if (fs.existsSync(this.dataDir)) {
                 const files = fs.readdirSync(this.dataDir);
-                const jsonFiles = files.filter(file => 
-                    file.endsWith('.json') && 
-                    file !== 'archive_results.json' && 
+                const jsonFiles = files.filter(file =>
+                    file.endsWith('.json') &&
+                    file !== 'archive_results.json' &&
                     (file.startsWith('final_report_') || file.startsWith('progress_log'))
                 );
 
@@ -283,10 +283,10 @@ class SmartArchiveChecker {
             };
 
             const finalOptions = { ...defaultOptions, ...options };
-            
+
             this.printMessage('🌐', `Navegando: ${url.substring(0, 80)}...`);
             const response = await page.goto(url, finalOptions);
-            
+
             return { success: true, response };
         } catch (error) {
             if (error.message.includes('Timeout')) {
@@ -342,13 +342,13 @@ class SmartArchiveChecker {
             const successMessage = await page.evaluate(() => {
                 const preElements = document.querySelectorAll('pre');
                 for (let pre of preElements) {
-                    if (pre.textContent.includes('Saving page') && 
-                        pre.textContent.includes('Done!') && 
+                    if (pre.textContent.includes('Saving page') &&
+                        pre.textContent.includes('Done!') &&
                         pre.textContent.includes('Visit page:')) {
                         return pre.textContent;
                     }
                 }
-                
+
                 const divs = document.querySelectorAll('div');
                 for (let div of divs) {
                     const text = div.textContent;
@@ -396,28 +396,28 @@ class SmartArchiveChecker {
 
     async checkIfArchived(url) {
         let retries = 0;
-        
+
         while (retries < this.config.wayback.maxRetries) {
             const page = await this.browser.newPage();
-            
+
             try {
                 console.log(`🔍 [${retries + 1}/${this.config.wayback.maxRetries}] Verificando: ${this.truncateUrl(url)}`);
-                
+
                 const checkUrl = `https://archive.org/wayback/available?url=${encodeURIComponent(url)}`;
-                
-                await page.goto(checkUrl, { 
+
+                await page.goto(checkUrl, {
                     waitUntil: 'domcontentloaded',
-                    timeout: this.config.wayback.timeout 
+                    timeout: this.config.wayback.timeout
                 });
 
                 const dynamicDelay = await this.getDynamicDelay();
                 await this.delay(dynamicDelay);
 
                 const content = await page.content();
-                
+
                 if (content.includes('archived_snapshots') && content.includes('available')) {
                     const snapshotMatch = content.match(/"url":"(https?:\/\/web\.archive\.org\/web\/\d+\/[^"]*)"/);
-                    
+
                     if (snapshotMatch && snapshotMatch[1]) {
                         await page.close();
                         console.log(`✅ Já arquivada: ${this.truncateUrl(snapshotMatch[1])}`);
@@ -427,7 +427,7 @@ class SmartArchiveChecker {
                 }
 
                 await page.close();
-                
+
                 if (retries === 0) {
                     const altResult = await this.alternativeCheck(url);
                     if (altResult.archived) return altResult;
@@ -436,16 +436,16 @@ class SmartArchiveChecker {
                 return { archived: false };
 
             } catch (error) {
-                await page.close().catch(() => {});
-                
+                await page.close().catch(() => { });
+
                 if (retries < this.config.wayback.maxRetries - 1) {
                     retries++;
                     console.log(`🔄 Tentativa ${retries} falhou, retry em 5s...`);
                     await this.delay(5000);
                 } else {
                     console.log(`❌ Falha na verificação após ${this.config.wayback.maxRetries} tentativas`);
-                    return { 
-                        archived: false, 
+                    return {
+                        archived: false,
                         error: {
                             type: "check_error",
                             message: error.message,
@@ -459,20 +459,20 @@ class SmartArchiveChecker {
 
     async alternativeCheck(url) {
         const page = await this.browser.newPage();
-        
+
         try {
             const directUrl = `https://web.archive.org/web/${new Date().getFullYear()}0000000000*/${url}`;
-            
-            await page.goto(directUrl, { 
+
+            await page.goto(directUrl, {
                 waitUntil: 'domcontentloaded',
-                timeout: 30000 
+                timeout: 30000
             });
 
             const dynamicDelay = await this.getDynamicDelay();
             await this.delay(dynamicDelay);
 
             const currentUrl = page.url();
-            
+
             if (currentUrl.includes('/web/') && currentUrl.match(/\/web\/\d{14}\//)) {
                 await page.close();
                 return { archived: true, snapshotUrl: currentUrl };
@@ -481,17 +481,17 @@ class SmartArchiveChecker {
             await page.close();
             return { archived: false };
         } catch (error) {
-            await page.close().catch(() => {});
+            await page.close().catch(() => { });
             return { archived: false };
         }
     }
 
     async tryArchiveUrl(url, retryCount = 0) {
         const attempts = this.urlAttempts.get(url);
-        
+
         if (attempts.wayback >= this.config.wayback.maxAttemptsPerUrl) {
-            return { 
-                success: false, 
+            return {
+                success: false,
                 error: {
                     type: "attempt_limit",
                     message: `Limite de ${this.config.wayback.maxAttemptsPerUrl} tentativas atingido`,
@@ -502,7 +502,7 @@ class SmartArchiveChecker {
 
         attempts.wayback++;
         attempts.lastAttempt = new Date();
-        
+
         const page = await this.browser.newPage();
         const logEntry = {
             timestamp: new Date().toISOString(),
@@ -552,13 +552,13 @@ class SmartArchiveChecker {
             }
 
             const snapshotUrl = await this.extractWaybackSnapshotInfo(page);
-            
+
             if (snapshotUrl && this.isValidSnapshotUrl(snapshotUrl)) {
                 this.printSuccess(`Arquivado: ${snapshotUrl}`);
                 logEntry.details.archivedUrl = snapshotUrl;
                 logEntry.success = true;
                 attempts.success = true;
-                
+
                 this.updateProgressLog(url, snapshotUrl);
                 await page.close();
                 return { success: true, snapshotUrl: snapshotUrl };
@@ -569,7 +569,7 @@ class SmartArchiveChecker {
                 logEntry.details.archivedUrl = currentUrl;
                 logEntry.success = true;
                 attempts.success = true;
-                
+
                 this.updateProgressLog(url, currentUrl);
                 await page.close();
                 return { success: true, snapshotUrl: currentUrl };
@@ -580,14 +580,14 @@ class SmartArchiveChecker {
                 this.printMessage('🔄', 'Tentando submeter formulário manualmente...');
                 await submitButton.click();
                 await this.humanDelay(5000, 8000);
-                
+
                 const newUrl = page.url();
                 if (this.isValidSnapshotUrl(newUrl)) {
                     this.printSuccess(`Sucesso após submit manual: ${newUrl}`);
                     logEntry.details.archivedUrl = newUrl;
                     logEntry.success = true;
                     attempts.success = true;
-                    
+
                     this.updateProgressLog(url, newUrl);
                     await page.close();
                     return { success: true, snapshotUrl: newUrl };
@@ -602,28 +602,28 @@ class SmartArchiveChecker {
             logEntry.error = error.message;
 
             this.printError(`Erro: ${error.message}`);
-            
+
             if (error.message === 'LIMITE_ATINGIDO') {
-                return { 
-                    success: false, 
+                return {
+                    success: false,
                     error: {
                         type: "daily_limit",
                         message: "Limite de tentativas atingido",
                         code: "LIMIT_EXCEEDED"
                     },
-                    limitReached: true 
+                    limitReached: true
                 };
             }
 
             if (retryCount < this.config.wayback.maxRetries) {
                 const retryDelay = 8000 + (retryCount * 2000);
-                this.printMessage('🔄', `Retentativa ${retryCount + 1} em ${retryDelay/1000}s...`);
+                this.printMessage('🔄', `Retentativa ${retryCount + 1} em ${retryDelay / 1000}s...`);
                 await this.humanDelay(retryDelay, retryDelay + 2000);
                 return this.tryArchiveUrl(url, retryCount + 1);
             }
 
-            return { 
-                success: false, 
+            return {
+                success: false,
                 error: {
                     type: "archive_error",
                     message: error.message,
@@ -650,10 +650,10 @@ class SmartArchiveChecker {
     }
 
     isValidSnapshotUrl(url) {
-        return url && 
-               url.includes('web.archive.org/web/') && 
-               url.match(/\/web\/\d{14}\//) &&
-               !url.includes('/save/');
+        return url &&
+            url.includes('web.archive.org/web/') &&
+            url.match(/\/web\/\d{14}\//) &&
+            !url.includes('/save/');
     }
 
     updateProgressLog(originalUrl, archivedUrl) {
@@ -683,10 +683,10 @@ class SmartArchiveChecker {
             this.results.results.archived.push(resultEntry);
             this.results.metadata.summary.archived++;
         } else {
-            resultEntry.error = result.error || { 
-                type: "unknown", 
+            resultEntry.error = result.error || {
+                type: "unknown",
                 message: "Erro desconhecido",
-                code: "UNKNOWN_ERROR" 
+                code: "UNKNOWN_ERROR"
             };
             this.results.results.failed.push(resultEntry);
             this.results.metadata.summary.failed++;
@@ -715,10 +715,10 @@ class SmartArchiveChecker {
 
     async processUrls(links) {
         this.printHeader('INICIANDO ARQUIVAMENTO');
-        
+
         await this.initializeConnection();
         await this.initBrowser();
-        
+
         let limitReached = false;
         const startTime = Date.now();
 
@@ -733,14 +733,14 @@ class SmartArchiveChecker {
 
                 try {
                     const checkResult = await this.checkIfArchived(url);
-                    
+
                     if (checkResult.archived) {
                         this.updateResults(url, checkResult);
                         this.updateProgressLog(url, checkResult.snapshotUrl);
                         this.printSuccess('URL já arquivada!');
                     } else {
                         const archiveResult = await this.tryArchiveUrl(url);
-                        
+
                         if (archiveResult.success) {
                             this.updateResults(url, archiveResult);
                             this.printSuccess('Arquivado com sucesso!');
@@ -755,8 +755,8 @@ class SmartArchiveChecker {
                     }
                 } catch (error) {
                     this.printError(`Erro ao processar URL: ${error.message}`);
-                    this.updateResults(url, { 
-                        success: false, 
+                    this.updateResults(url, {
+                        success: false,
                         error: {
                             type: "processing_error",
                             message: error.message,
@@ -803,17 +803,32 @@ class SmartArchiveChecker {
 
         this.createTextReport();
         this.showSummary();
+        this.openDocsFolder();
     }
 
+    openDocsFolder() {
+        try {
+            const docsPath = path.resolve(this.docsDir);
+            if (fs.existsSync(docsPath)) {
+                console.log(`\n📂 Abrindo pasta DOCS...`);
+                execSync(`start "" "${docsPath}"`, { stdio: 'ignore' });
+                this.printSuccess('Pasta DOCS aberta com sucesso!');
+            } else {
+                this.printWarning('Pasta DOCS não encontrada');
+            }
+        } catch (error) {
+            this.printWarning(`Não foi possível abrir a pasta DOCS: ${error.message}`);
+        }
+    }
     createTextReport() {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const reportPath = path.join(this.docsDir, `relatorio_${timestamp}.txt`);
-        
+
         // Criar pasta docs se não existir
         if (!fs.existsSync(this.docsDir)) {
             fs.mkdirSync(this.docsDir, { recursive: true });
         }
-        
+
         let reportContent = 'RELATÓRIO DE ARQUIVAMENTO - RAV ARCHIVE V1\n';
         reportContent += '='.repeat(60) + '\n';
         reportContent += `Data de geração: ${new Date().toLocaleString('pt-BR')}\n`;
@@ -946,7 +961,7 @@ class ConsoleColors {
     static magenta = '\x1b[35m';
     static cyan = '\x1b[36m';
     static white = '\x1b[37m';
-    
+
     static apply(color, text) {
         return `${color}${text}${this.reset}`;
     }
@@ -962,14 +977,14 @@ async function main() {
     console.log(ConsoleColors.apply(ConsoleColors.magenta, '║                                                              ║'));
     console.log(ConsoleColors.apply(ConsoleColors.magenta, '╚══════════════════════════════════════════════════════════════╝'));
     console.log('');
-    
+
     await AutoInstaller.setupEnvironment();
 
     const checker = new SmartArchiveChecker();
-    
+
     try {
         const links = await checker.loadLinks('links.txt');
-        
+
         console.log(ConsoleColors.apply(ConsoleColors.cyan, '\n🎯 CONFIGURAÇÃO DO SISTEMA:'));
         console.log(ConsoleColors.apply(ConsoleColors.blue, '   ═══════════════════════════════════════════════'));
         console.log(ConsoleColors.apply(ConsoleColors.green, '   • 📊 URLs carregadas:'), ConsoleColors.apply(ConsoleColors.yellow, links.length));
@@ -985,9 +1000,9 @@ async function main() {
         console.log(ConsoleColors.apply(ConsoleColors.yellow, '    e processará todas as URLs disponíveis.\n'));
 
         console.log(ConsoleColors.apply(ConsoleColors.green, '🚀 INICIANDO ARQUIVAMENTO AUTOMATICAMENTE...\n'));
-        
+
         await checker.processUrls(links);
-        
+
     } catch (error) {
         console.error(ConsoleColors.apply(ConsoleColors.red, '❌ Erro fatal:'), error.message);
         process.exit(1);
