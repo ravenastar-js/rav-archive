@@ -220,3 +220,14 @@ Este projeto está sob licença MIT. Veja o arquivo [LICENSE](LICENSE) para deta
 [⬆ Voltar ao topo](#-rav-archive)
 
 </div>
+
+---
+
+![RavArchive](https://i.imgur.com/dZpPQty.png)
+
+<div align="center">
+BANNER INSPIRADO EM
+<br>
+<a href="https://store.steampowered.com/app/1507580/Enigma_do_Medo" >
+  <img src="https://i.imgur.com/Gbyx94i.png" width="180">
+</a>
