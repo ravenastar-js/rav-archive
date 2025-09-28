@@ -86,13 +86,27 @@ BANNER INSPIRADO EM
 ## 🚀 Como Usar
 
 ### 📥 Instalação
-1. **Baixe o projeto**
-   ```
-   https://github.com/ravenastar-js/rav-archive/archive/refs/heads/main.zip
-   ```
+
+1. **Baixe o projeto como ZIP**
+   - Link direto:
+     ```
+     https://github.com/ravenastar-js/rav-archive/archive/refs/heads/main.zip
+     ```
+
+   - Ou via CMD (sem Git), usando `curl`:
+     ```
+     curl -L -o rav-archive.zip https://github.com/ravenastar-js/rav-archive/archive/refs/heads/main.zip
+     ```
+
+2. **Extraia o conteúdo**
+   - Manualmente: clique com o botão direito no `.zip` e selecione **“Extrair tudo”**
+   - Ou via terminal:
+     ```
+     tar -xf rav-archive.zip
+     ```
 
 ### ⚙️ Preparação
-2. **Configure suas URLs**
+3. **Configure suas URLs**
    - Abra o arquivo `links.txt` na pasta raiz
    - Adicione as URLs (um por linha)
    ```
@@ -102,13 +116,13 @@ BANNER INSPIRADO EM
    ```
 
 ### 🚀 Execução
-3. **Execute o arquivador**
+4. **Execute o arquivador**
    ```
    iniciar.bat
    ```
 
 ### 📊 Resultados
-4. **Aguarde o processamento**
+5. **Aguarde o processamento**
    - O script é 100% automático
    - Progresso visível no terminal
    - Resultados salvos na pasta `DADOS/` e `DOCS/`
