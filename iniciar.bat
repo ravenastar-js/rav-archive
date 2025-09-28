@@ -5,17 +5,11 @@ chcp 65001 >nul
 set "SCRIPT_DIR=%~dp0"
 cd /d "%SCRIPT_DIR%"
 
-echo.
-echo ========================================
-echo    RAV ARCHIVE - INSTALADOR
-echo ========================================
-echo.
-
 :: Verifica Node.js
 node --version >nul 2>&1
 if errorlevel 1 (
     echo Node.js nao encontrado!
-    echo Baixe em: https://nodejs.org
+    echo Baixe em: https://www.nodejs.tech/pt-br/download
     pause
     exit /b 1
 )
