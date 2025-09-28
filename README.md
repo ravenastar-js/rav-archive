@@ -75,7 +75,7 @@ BANNER INSPIRADO EM
 ## ✨ FAQ
 
 <details>
-<summary><strong>📥 Como instalar o NodeJS?</strong></summary>
+<summary>📥 Como instalar o NodeJS?</summary>
 - [COMO INSTALAR NODE JS NO WINDOWS?](https://youtu.be/-jft_9PlffQ)
 </details>
 
