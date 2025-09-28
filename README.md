@@ -1,15 +1,15 @@
 <div align="center">
 
-# 🤖 Rav Archive System 
+# 🤖 Rav Archive
 ### Arquivador Automático de URLs no Wayback Machine
 
-[![⭐ Stars](https://img.shields.io/github/stars/ravenastar-js/rav-archive-system?style=for-the-badge&label=%E2%AD%90%20Stars&color=2d7445&logo=star&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive-system/stargazers)
-[![🔱 Forks](https://img.shields.io/github/forks/ravenastar-js/rav-archive-system?style=for-the-badge&label=%F0%9F%94%B1%20Forks&color=2d7445&logo=git&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive-system/network/members)
-[![👁️ Watchers](https://img.shields.io/github/watchers/ravenastar-js/rav-archive-system?style=for-the-badge&label=%F0%9F%91%81%EF%B8%8F%20Watchers&color=2d7445&logo=eye&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive-system/watchers)
-[![📄 License](https://img.shields.io/github/license/ravenastar-js/rav-archive-system?style=for-the-badge&label=%F0%9F%93%84%20License&color=2d7445&logo=book&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive-system/blob/main/LICENSE)
-[![🕒 Last Commit](https://img.shields.io/github/last-commit/ravenastar-js/rav-archive-system?style=for-the-badge&label=%F0%9F%95%92%20Last%20Commit&color=2d7445&logo=clock&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive-system/commits/all)
-[![🐞 Issues](https://img.shields.io/github/issues/ravenastar-js/rav-archive-system?style=for-the-badge&label=%F0%9F%90%9E%20Issues&color=2d7445&logo=bug&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive-system/issues)
-[![📦 Repo Size](https://img.shields.io/github/repo-size/ravenastar-js/rav-archive-system?style=for-the-badge&label=%F0%9F%93%A6%20Repo%20Size&color=2d7445&logo=database&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive-system)
+[![⭐ Stars](https://img.shields.io/github/stars/ravenastar-js/rav-archive?style=for-the-badge&label=%E2%AD%90%20Stars&color=2d7445&logo=star&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/stargazers)
+[![🔱 Forks](https://img.shields.io/github/forks/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%94%B1%20Forks&color=2d7445&logo=git&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/network/members)
+[![👁️ Watchers](https://img.shields.io/github/watchers/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%91%81%EF%B8%8F%20Watchers&color=2d7445&logo=eye&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/watchers)
+[![📄 License](https://img.shields.io/github/license/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%93%84%20License&color=2d7445&logo=book&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/blob/main/LICENSE)
+[![🕒 Last Commit](https://img.shields.io/github/last-commit/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%95%92%20Last%20Commit&color=2d7445&logo=clock&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/commits/all)
+[![🐞 Issues](https://img.shields.io/github/issues/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%90%9E%20Issues&color=2d7445&logo=bug&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/issues)
+[![📦 Repo Size](https://img.shields.io/github/repo-size/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%93%A6%20Repo%20Size&color=2d7445&logo=database&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive)
 [![⚙️ Node.js](https://img.shields.io/badge/%E2%9A%99%EF%B8%8F%20Node.js-16.0%2B-green?style=for-the-badge&logo=nodedotjs&color=2d7445&logoColor=white&labelColor=444&radius=10)](https://nodejs.org/)
 [![🎭 Playwright](https://img.shields.io/badge/%F0%9F%8E%AD%20Playwright-Latest-blue?style=for-the-badge&logo=playwright&color=2d7445&logoColor=white&labelColor=444&radius=10)](https://playwright.dev/)
 [![🖥️ Platform](https://img.shields.io/badge/%F0%9F%96%A5%EF%B8%8F%20Platform-Windows-blue?style=for-the-badge&logo=windows&color=2d7445&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/wintools)
@@ -80,7 +80,7 @@
 ### 📥 Instalação
 1. **Baixe o projeto**
    ```
-   https://github.com/ravenastar-js/rav-archive-system/archive/refs/heads/main.zip
+   https://github.com/ravenastar-js/rav-archive/archive/refs/heads/main.zip
    ```
 
 ### ⚙️ Preparação
@@ -132,7 +132,7 @@
 ## 📁 Estrutura de Arquivos
 
 ```
-📁 rav-archive-system/
+📁 rav-archive/
 ├── 📄 archive.js                 # Script principal
 ├── 📦 package.json              # Dependências do projeto
 ├── 📖 README.md                 # Esta documentação
@@ -229,6 +229,6 @@ Este projeto está sob licença MIT. Veja o arquivo [LICENSE](LICENSE) para deta
 
 **Feito com 💚 por RavenaStar**
 
-[⬆ Voltar ao topo](#🤖-rav-archive-system)
+[⬆ Voltar ao topo](#-rav-archive)
 
 </div>
