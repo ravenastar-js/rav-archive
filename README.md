@@ -76,16 +76,12 @@ BANNER INSPIRADO EM
 
 <details>
 <summary><strong>📥 Como instalar o NodeJS?</strong></summary>
-
 - [COMO INSTALAR NODE JS NO WINDOWS?](https://youtu.be/-jft_9PlffQ)
-
 </details>
 
 <details>
-<summary><strong>📥 Como baixar e executar o Rav Archive?</strong></summary>
-
+<summary>📥 Como baixar e executar o Rav Archive?</summary>
 <img src="https://i.imgur.com/hLh76om.gif" alt="Baixando e executando o Rav Archive"/>
-
 </details>
 
 ---
