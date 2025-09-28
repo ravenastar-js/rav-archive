@@ -1,2 +1,6 @@
+# Dependências do Node.js
 package-lock.json
 node_modules/
+
+# Pasta DADOS - ignora todos os arquivos, mas mantém a pasta
+DADOS/*
