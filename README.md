@@ -133,15 +133,15 @@
 
 ```
 📁 rav-archive/
-├── 📄 archive.js                 # Script principal
-├── 📦 package.json              # Dependências do projeto
-├── 📖 README.md                 # Esta documentação
-├── 🏃 iniciar.bat               # Executor automático
-├── 📝 links.txt                 # URLs para arquivar (criar)
-└── 📁 DADOS/                     # Pasta gerada automaticamente
-    ├── 📊 progress_log.json     # Progresso em tempo real
-    ├── 📋 archive_results.json  # Resultados completos
-    └── 📈 final_report_[data].json # Relatório final
+├── 📄 archive.js
+├── 📦 package.json
+├── 📖 README.md
+├── ⚡ iniciar.bat # [EXECUTAR]
+├── 📝 links.txt # [EDITAR]
+└── 📁 DADOS/
+    ├── 📊 progress_log.json
+    ├── 📋 archive_results.json
+    └── 📈 final_report_[data].json
 ```
 
 ---
