@@ -35,7 +35,6 @@
 <summary><strong>⚡ Funcionalidades</strong></summary>
 
 - [Recursos Principais](#-recursos-principais)
-- [Características Técnicas](#-características-técnicas)
 
 </details>
 
@@ -44,7 +43,6 @@
 
 - [Estrutura de Arquivos](#-estrutura-de-arquivos)
 - [Configuração do links.txt](#-configuração-do-linkstxt)
-- [Formato JSON de Saída](#-formato-json-de-saída)
 
 </details>
 
@@ -52,16 +50,7 @@
 <summary><strong>🛠️ Comandos e Uso Avançado</strong></summary>
 
 - [Comandos Disponíveis](#️-comandos-disponíveis)
-- [Exemplos de Uso](#-exemplos-de-uso)
 - [Troubleshooting](#-troubleshooting)
-
-</details>
-
-<details>
-<summary><strong>📊 Monitoramento e Relatórios</strong></summary>
-
-- [Saída do Terminal](#-saída-do-terminal)
-- [Interpretando Resultados](#-interpretando-resultados)
 
 </details>
 
@@ -69,7 +58,6 @@
 <summary><strong>⚙️ Requisitos e Limitações</strong></summary>
 
 - [Requisitos do Sistema](#️-requisitos-do-sistema)
-- [Limitações Conhecidas](#-limitações-conhecidas)
 
 </details>
 
