@@ -71,6 +71,7 @@ BANNER INSPIRADO EM
 </details>
 
 ---
+
 ## ✨ FAQ
 
 <details>
