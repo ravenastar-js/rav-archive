@@ -85,8 +85,8 @@
 
 ### ⚙️ Preparação
 2. **Configure suas URLs**
-   - Crie o arquivo `links.txt` na pasta raiz
-   - Adicione uma URL por linha
+   - Abra o arquivo `links.txt` na pasta raiz
+   - Adicione as URLs (um por linha)
    ```
    https://exemplo1.com
    https://exemplo2.com/blog
