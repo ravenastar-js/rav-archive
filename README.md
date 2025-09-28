@@ -216,7 +216,7 @@ Solução: Verifique o formato no links.txt
 Erro: Navigation timeout
 Solução: Verifique conexão internet
 ```
-
+ 
 ---
 
 ## 📄 Licença
