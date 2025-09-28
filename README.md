@@ -131,15 +131,18 @@ BANNER INSPIRADO EM
 
 ```
 📁 rav-archive/
-├── 📄 archive.js
-├── 📦 package.json
-├── 📖 README.md
-├── ⚡ iniciar.bat # [EXECUTAR]
-├── 📝 links.txt # [EDITAR]
-└── 📁 DADOS/
-    ├── 📊 progress_log.json
-    ├── 📋 archive_results.json
-    └── 📈 final_report_[data].json
+├── 📄 archive.js                    # [OBRIGATÓRIO]
+├── 📦 package.json                  # [OBRIGATÓRIO]
+├── 📖 README.md                     # [OPCIONAL]
+├── ⚡ iniciar.bat                   # [EXECUTÁVEL]
+├── 📝 links.txt                     # [EDITÁVEL]
+├── 📁 docs/                         # [OBRIGATÓRIO]
+│   └── 📄 relatorio_[data].txt      # [GERADO AUTOMATICAMENTE]
+└── 📁 DADOS/                        # [OBRIGATÓRIO]
+    ├── 📊 progress_log.json         # [GERADO AUTOMATICAMENTE]
+    ├── 📋 archive_results.json      # [GERADO AUTOMATICAMENTE]
+    └── 📈 final_report_[data].json  # [GERADO AUTOMATICAMENTE]
+
 ```
 
 ---

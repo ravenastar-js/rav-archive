@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { execSync, exec } = require('child_process');
+const { execSync} = require('child_process');
 const path = require('path');
 const { URL } = require('url');
 const readline = require('readline');
@@ -123,6 +123,7 @@ class AutoInstaller {
 class SmartArchiveChecker {
     constructor() {
         this.dataDir = 'DADOS';
+        this.docsDir = 'docs';
         this.connectionManager = new ConnectionManager();
         this.results = {
             metadata: {
@@ -171,12 +172,38 @@ class SmartArchiveChecker {
         };
         
         this.ensureDataDirectory();
+        this.cleanupRedundantFiles();
     }
 
     ensureDataDirectory() {
         if (!fs.existsSync(this.dataDir)) {
             fs.mkdirSync(this.dataDir, { recursive: true });
             this.printMessage('📁', `Pasta ${this.dataDir} criada`);
+        }
+    }
+
+    cleanupRedundantFiles() {
+        try {
+            if (fs.existsSync(this.dataDir)) {
+                const files = fs.readdirSync(this.dataDir);
+                const jsonFiles = files.filter(file => 
+                    file.endsWith('.json') && 
+                    file !== 'archive_results.json' && 
+                    (file.startsWith('final_report_') || file.startsWith('progress_log'))
+                );
+
+                jsonFiles.forEach(file => {
+                    const filePath = path.join(this.dataDir, file);
+                    fs.unlinkSync(filePath);
+                    this.printMessage('🧹', `Arquivo redundante removido: ${file}`);
+                });
+
+                if (jsonFiles.length > 0) {
+                    this.printSuccess(`${jsonFiles.length} arquivos redundantes removidos`);
+                }
+            }
+        } catch (error) {
+            this.printWarning(`Erro ao limpar arquivos redundantes: ${error.message}`);
         }
     }
 
@@ -639,8 +666,7 @@ class SmartArchiveChecker {
     }
 
     saveIncrementalReport() {
-        const reportPath = path.join(this.dataDir, 'progress_log.json');
-        fs.writeFileSync(reportPath, JSON.stringify(this.progressLog, null, 2));
+        this.saveResults();
     }
 
     updateResults(url, result) {
@@ -758,6 +784,7 @@ class SmartArchiveChecker {
                 this.printMessage('🖥️', 'Navegador fechado');
             }
             this.saveResults();
+            this.cleanupRedundantFiles(); // Limpeza final
         }
     }
 
@@ -774,28 +801,63 @@ class SmartArchiveChecker {
         console.log(`├── Falhas: ${this.results.metadata.summary.failed}`);
         console.log(`└── Taxa de sucesso: ${successRate}%`);
 
-        this.saveFinalReport();
+        this.createTextReport();
+        this.showSummary();
     }
 
-    saveFinalReport() {
+    createTextReport() {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const reportPath = path.join(this.dataDir, `final_report_${timestamp}.json`);
+        const reportPath = path.join(this.docsDir, `relatorio_${timestamp}.txt`);
+        
+        // Criar pasta docs se não existir
+        if (!fs.existsSync(this.docsDir)) {
+            fs.mkdirSync(this.docsDir, { recursive: true });
+        }
+        
+        let reportContent = 'RELATÓRIO DE ARQUIVAMENTO - RAV ARCHIVE V1\n';
+        reportContent += '='.repeat(60) + '\n';
+        reportContent += `Data de geração: ${new Date().toLocaleString('pt-BR')}\n`;
+        reportContent += `Total de URLs processadas: ${this.results.metadata.summary.total}\n`;
+        reportContent += `URLs arquivadas com sucesso: ${this.results.metadata.summary.archived}\n`;
+        reportContent += `Falhas: ${this.results.metadata.summary.failed}\n`;
+        reportContent += `Taxa de sucesso: ${((this.results.metadata.summary.archived / this.results.metadata.summary.total) * 100).toFixed(1)}%\n\n`;
+        reportContent += '-'.repeat(60) + '\n';
+        reportContent += 'URLS ARQUIVADAS COM SUCESSO:\n';
+        reportContent += '-'.repeat(60) + '\n\n';
 
-        const report = {
-            metadata: {
-                generatedAt: new Date().toISOString(),
-                totalUrls: this.results.metadata.summary.total,
-                waybackSuccess: this.results.metadata.summary.archived,
-                totalFailed: this.results.metadata.summary.failed,
-                successRate: ((this.results.metadata.summary.archived / this.results.metadata.summary.total) * 100).toFixed(1) + '%'
-            },
-            archives: this.progressLog.archives
-        };
+        // Adicionar URLs arquivadas com sucesso
+        const successfulUrls = Array.from(this.urlAttempts.entries())
+            .filter(([_, attempts]) => attempts.success)
+            .map(([url, _]) => url);
 
-        fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
+        successfulUrls.forEach((url, index) => {
+            const waybackUrl = this.progressLog.archives[url]?.archives;
+            reportContent += `${index + 1}. ${url}\n`;
+            reportContent += `🔗 ${waybackUrl || 'Link não disponível'}\n\n`;
+        });
 
-        this.printSuccess(`Relatório salvo: final_report_${timestamp}.json`);
-        this.showSummary();
+        // Adicionar URLs que falharam
+        if (this.results.metadata.summary.failed > 0) {
+            reportContent += '-'.repeat(60) + '\n';
+            reportContent += 'URLS COM FALHA NO ARQUIVAMENTO:\n';
+            reportContent += '-'.repeat(60) + '\n\n';
+
+            const failedUrls = Array.from(this.urlAttempts.entries())
+                .filter(([_, attempts]) => !attempts.success)
+                .map(([url, _]) => url);
+
+            failedUrls.forEach((url, index) => {
+                reportContent += `${index + 1}. ${url}\n`;
+                reportContent += `❌ Falha no arquivamento\n\n`;
+            });
+        }
+
+        reportContent += '-'.repeat(60) + '\n';
+        reportContent += 'FIM DO RELATÓRIO\n';
+        reportContent += '='.repeat(60);
+
+        fs.writeFileSync(reportPath, reportContent, 'utf8');
+        this.printSuccess(`Relatório em texto salvo: relatorio_${timestamp}.txt`);
     }
 
     showSummary() {
@@ -916,6 +978,7 @@ async function main() {
         console.log(ConsoleColors.apply(ConsoleColors.green, '   • ⏱️  Timeout:'), ConsoleColors.apply(ConsoleColors.yellow, '60 segundos'));
         console.log(ConsoleColors.apply(ConsoleColors.green, '   • 🔄 Tentativas máximas:'), ConsoleColors.apply(ConsoleColors.yellow, '4 por URL'));
         console.log(ConsoleColors.apply(ConsoleColors.green, '   • 🛡️  Navegador:'), ConsoleColors.apply(ConsoleColors.yellow, 'Chromium Headless'));
+        console.log(ConsoleColors.apply(ConsoleColors.green, '   • 🧹 Limpeza automática:'), ConsoleColors.apply(ConsoleColors.yellow, 'ATIVADA (apenas archive_results.json)'));
         console.log(ConsoleColors.apply(ConsoleColors.blue, '   ═══════════════════════════════════════════════\n'));
 
         console.log(ConsoleColors.apply(ConsoleColors.yellow, '💡 INFORMAÇÃO: O script continuará mesmo com erros individuais'));
