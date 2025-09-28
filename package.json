@@ -1,0 +1,25 @@
+{
+  "name": "rav-archive",
+  "version": "1.0.0",
+  "description": "📦✨ Arquivando links automaticamente com Playwright e Wayback Machine 🌐🕰️",
+  "main": "archive.js",
+  "scripts": {
+    "start": "node archive.js",
+    "nv": "npm install && npx playwright install chromium"
+  },
+  "keywords": [
+    "archive",
+    "wayback-machine",
+    "playwright",
+    "automation",
+    "web-preservation"
+  ],
+  "author": "ravenastar-js",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.55.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
