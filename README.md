@@ -1,7 +1,7 @@
 <div align="center">
 
 # 🤖 Rav Archive
-### Arquivador Automático de URLs no Wayback Machine
+### ✨ Arquivando links automaticamente com 🌐 Playwright e 🕰️ Wayback Machine 
 
 [![⭐ Stars](https://img.shields.io/github/stars/ravenastar-js/rav-archive?style=for-the-badge&label=%E2%AD%90%20Stars&color=2d7445&logo=star&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/stargazers)
 [![🔱 Forks](https://img.shields.io/github/forks/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%94%B1%20Forks&color=2d7445&logo=git&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/network/members)
