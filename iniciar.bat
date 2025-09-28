@@ -21,7 +21,6 @@ if errorlevel 1 (
     pause
     exit /b 1
 )
-
 echo ✅ Node.js detectado
 
 :: Instala apenas o Playwright (npm cria package.json automaticamente)
@@ -41,7 +40,6 @@ if errorlevel 1 (
     pause
     exit /b 1
 )
-
 echo ✅ Playwright instalado com sucesso!
 
 :: Instala o Chromium do Playwright
@@ -55,7 +53,6 @@ if errorlevel 1 (
     pause
     exit /b 1
 )
-
 echo ✅ Chromium instalado com sucesso!
 
 :: Verifica se o arquivo archive.js existe
@@ -67,8 +64,23 @@ if not exist "archive.js" (
     pause
     exit /b 1
 )
-
 echo ✅ archive.js encontrado
+
+:: Cria as pastas DADOS e DOCS se não existirem
+echo 📁 Verificando pastas necessárias...
+if not exist "DADOS" (
+    echo ➕ Criando pasta DADOS...
+    mkdir "DADOS"
+) else (
+    echo ✅ Pasta DADOS já existe
+)
+
+if not exist "DOCS" (
+    echo ➕ Criando pasta DOCS...
+    mkdir "DOCS"
+) else (
+    echo ✅ Pasta DOCS já existe
+)
 
 :: Execução do script principal
 echo.
@@ -77,6 +89,5 @@ echo    🚀 INICIANDO RAV ARCHIVE
 echo ========================================
 echo.
 
-:: Executa o arquivo JavaScript
 node archive.js
 pause
