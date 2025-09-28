@@ -4,10 +4,6 @@ const path = require('path');
 const { URL } = require('url');
 const readline = require('readline');
 
-/**
- * 🌐 Sistema Simplificado de Conexão
- * @class Gerenciador de conexão direta com verificações automáticas
- */
 class ConnectionManager {
     constructor() {
         this.connectionType = 'Direct';
@@ -76,10 +72,6 @@ class ConnectionManager {
     }
 }
 
-/**
- * 🔧 Classe de gerenciamento de instalação automática
- * @class Configura ambiente automaticamente
- */
 class AutoInstaller {
     static async setupEnvironment() {
         console.log('🔧 Iniciando configuração automática...\n');
@@ -128,10 +120,6 @@ class AutoInstaller {
     }
 }
 
-/**
- * 🚀 Classe principal de arquivamento OTIMIZADA - MODO DIRETO
- * @class Sistema inteligente de arquivamento no Wayback Machine
- */
 class SmartArchiveChecker {
     constructor() {
         this.dataDir = 'DADOS';
@@ -140,8 +128,7 @@ class SmartArchiveChecker {
             metadata: {
                 timestamp: new Date().toISOString(),
                 summary: { total: 0, archived: 0, failed: 0, pending: 0 },
-                status: "in_progress",
-                connection: { type: 'Direct', vpnWarning: true }
+                status: "in_progress"
             },
             results: { archived: [], failed: [] }
         };
@@ -196,7 +183,6 @@ class SmartArchiveChecker {
     async initializeConnection() {
         console.log('🔗 CONFIGURANDO CONEXÃO...');
         await this.connectionManager.initializeConnection();
-        this.results.metadata.connection.type = 'Direct';
         console.log('⚡ Conexão configurada - Delays otimizados');
     }
 
@@ -261,13 +247,6 @@ class SmartArchiveChecker {
         await new Promise(resolve => setTimeout(resolve, delay));
     }
 
-    /**
-     * Navegação segura para uma URL com tratamento de erros
-     * @param {object} page - Instância da página Playwright
-     * @param {string} url - URL para navegar
-     * @param {object} options - Opções de navegação
-     * @returns {object} Resultado da navegação
-     */
     async safeGoto(page, url, options = {}) {
         try {
             const defaultOptions = {
@@ -291,12 +270,6 @@ class SmartArchiveChecker {
         }
     }
 
-    /**
-     * Verifica se o limite do Wayback Machine foi atingido
-     * @param {object} page - Instância da página Playwright
-     * @param {string} url - URL sendo processada
-     * @returns {boolean} True se o limite foi atingido
-     */
     async checkWaybackLimit(page, url) {
         const attempts = this.urlAttempts.get(url);
         if (attempts.wayback >= this.config.wayback.maxAttemptsPerUrl) {
@@ -329,11 +302,6 @@ class SmartArchiveChecker {
         }
     }
 
-    /**
-     * Extrai informações do snapshot do Wayback Machine
-     * @param {object} page - Instância da página Playwright
-     * @returns {string|null} URL do snapshot ou null
-     */
     async extractWaybackSnapshotInfo(page) {
         try {
             await page.waitForTimeout(3000);
@@ -491,12 +459,6 @@ class SmartArchiveChecker {
         }
     }
 
-    /**
-     * Arquiva uma URL usando Wayback Machine (método melhorado do script antigo)
-     * @param {string} url - URL a ser arquivada
-     * @param {number} retryCount - Contador de tentativas
-     * @returns {object} Resultado do arquivamento
-     */
     async tryArchiveUrl(url, retryCount = 0) {
         const attempts = this.urlAttempts.get(url);
         
@@ -667,11 +629,6 @@ class SmartArchiveChecker {
                !url.includes('/save/');
     }
 
-    /**
-     * Atualiza o log de progresso com nova URL arquivada
-     * @param {string} originalUrl - URL original
-     * @param {string} archivedUrl - URL arquivada
-     */
     updateProgressLog(originalUrl, archivedUrl) {
         this.progressLog.archives[originalUrl] = {
             timestamp: new Date().toISOString(),
@@ -681,9 +638,6 @@ class SmartArchiveChecker {
         this.progressLog.metadata.timestamp = new Date().toISOString();
     }
 
-    /**
-     * Salva relatório incremental durante a execução
-     */
     saveIncrementalReport() {
         const reportPath = path.join(this.dataDir, 'progress_log.json');
         fs.writeFileSync(reportPath, JSON.stringify(this.progressLog, null, 2));
@@ -695,11 +649,7 @@ class SmartArchiveChecker {
             originalUrl: url,
             timestamp: new Date().toISOString(),
             title: this.extractTitleFromUrl(url),
-            status: result.archived || result.success ? "success" : "failed",
-            connection: {
-                type: 'Direct',
-                vpnWarning: true
-            }
+            status: result.archived || result.success ? "success" : "failed"
         };
 
         if (result.archived || result.success) {
@@ -827,9 +777,6 @@ class SmartArchiveChecker {
         this.saveFinalReport();
     }
 
-    /**
-     * Salva relatório final em arquivo
-     */
     saveFinalReport() {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const reportPath = path.join(this.dataDir, `final_report_${timestamp}.json`);
@@ -851,9 +798,6 @@ class SmartArchiveChecker {
         this.showSummary();
     }
 
-    /**
-     * Mostra resumo executivo final
-     */
     showSummary() {
         const successfulUrls = Array.from(this.urlAttempts.entries())
             .filter(([_, attempts]) => attempts.success)
@@ -877,56 +821,28 @@ class SmartArchiveChecker {
         return url.length > length ? url.substring(0, length) + '...' : url;
     }
 
-    // ===== MÉTODOS DE UI/UX MELHORADOS DO SCRIPT ANTIGO =====
-
-    /**
-     * Imprime mensagem formatada
-     * @param {string} icon - Ícone/emoji
-     * @param {string} message - Mensagem
-     */
     printMessage(icon, message) {
         console.log(`${icon}  ${message}`);
     }
 
-    /**
-     * Imprime mensagem de sucesso
-     * @param {string} message - Mensagem
-     */
     printSuccess(message) {
         console.log(`✅  ${message}`);
     }
 
-    /**
-     * Imprime mensagem de erro
-     * @param {string} message - Mensagem
-     */
     printError(message) {
         console.log(`❌  ${message}`);
     }
 
-    /**
-     * Imprime mensagem de aviso
-     * @param {string} message - Mensagem
-     */
     printWarning(message) {
         console.log(`⚠️  ${message}`);
     }
 
-    /**
-     * Imprime cabeçalho formatado
-     * @param {string} title - Título do cabeçalho
-     */
     printHeader(title) {
         console.log('\n' + '='.repeat(60));
         console.log(`🎯 ${title}`);
         console.log('='.repeat(60));
     }
 
-    /**
-     * Imprime seção de processo
-     * @param {string} service - Nome do serviço
-     * @param {string} url - URL sendo processada
-     */
     printSection(service, url) {
         console.log('\n' + '-'.repeat(50));
         console.log(`🔵 ${service}:`);
@@ -934,25 +850,11 @@ class SmartArchiveChecker {
         console.log('-'.repeat(50));
     }
 
-    /**
-     * Imprime progresso atual
-     * @param {number} current - Item atual
-     * @param {number} total - Total de itens
-     * @param {string} url - URL sendo processada
-     * @param {number} attempts - Número de tentativas
-     */
     printProgress(current, total, url, attempts) {
         console.log(`\n📊 [${current}/${total}] ${url}`);
         console.log(`🔄 Tentativas: ${attempts}/${this.config.wayback.maxAttemptsPerUrl}`);
     }
 
-    /**
-     * Mostra progresso atual da execução
-     * @param {number} current - Item atual
-     * @param {number} total - Total de itens
-     * @param {number} successCount - Contador de sucessos
-     * @param {number} startTime - Timestamp de início
-     */
     showCurrentProgress(current, total, successCount, startTime) {
         const progress = ((current) / total * 100).toFixed(1);
         const elapsed = Math.floor((Date.now() - startTime) / 1000);
@@ -963,7 +865,6 @@ class SmartArchiveChecker {
     }
 }
 
-// VERIFICAÇÃO INICIAL
 if (!fs.existsSync('links.txt')) {
     console.error('❌ Arquivo links.txt não encontrado!');
     console.log('\n📝 Crie o arquivo links.txt com uma URL por linha:');
@@ -973,9 +874,6 @@ if (!fs.existsSync('links.txt')) {
     process.exit(1);
 }
 
-/**
- * 🎨 Sistema de cores para console
- */
 class ConsoleColors {
     static reset = '\x1b[0m';
     static bright = '\x1b[1m';
@@ -992,9 +890,6 @@ class ConsoleColors {
     }
 }
 
-/**
- * 🚀 Função principal do sistema
- */
 async function main() {
     console.log(ConsoleColors.apply(ConsoleColors.magenta, '╔══════════════════════════════════════════════════════════════╗'));
     console.log(ConsoleColors.apply(ConsoleColors.magenta, '║                                                              ║'));
@@ -1026,7 +921,6 @@ async function main() {
         console.log(ConsoleColors.apply(ConsoleColors.yellow, '💡 INFORMAÇÃO: O script continuará mesmo com erros individuais'));
         console.log(ConsoleColors.apply(ConsoleColors.yellow, '    e processará todas as URLs disponíveis.\n'));
 
-        // Execução automática sem confirmação adicional
         console.log(ConsoleColors.apply(ConsoleColors.green, '🚀 INICIANDO ARQUIVAMENTO AUTOMATICAMENTE...\n'));
         
         await checker.processUrls(links);
@@ -1037,7 +931,6 @@ async function main() {
     }
 }
 
-// EXECUÇÃO PRINCIPAL
 if (require.main === module) {
     main().catch(error => {
         console.error(ConsoleColors.apply(ConsoleColors.red, '💥 Erro não tratado:'), error);
