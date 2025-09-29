@@ -3,7 +3,10 @@ package-lock.json
 node_modules/
 
 # Pasta DADOS - ignora todos os arquivos, mas mantém a pasta
-DADOS/*
+DADOS/
 
 # Pasta DOCS - ignora todos os arquivos, mas mantém a pasta
-DOCS/*
+DOCS/
+
+# Ignorar pasta admin
+admin/
