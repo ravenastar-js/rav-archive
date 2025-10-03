@@ -1,12 +1,6 @@
 #!/usr/bin/env node
 
-const { RavArchive } = require('./index');
 const { showBanner, showHelp } = require('./utils/logger');
-const fileCommand = require('./commands/file');
-const urlCommand = require('./commands/url');
-const batchCommand = require('./commands/batch');
-const checkCommand = require('./commands/check');
-const statsCommand = require('./commands/stats');
 
 async function main() {
     const args = process.argv.slice(2);
@@ -23,6 +17,14 @@ async function main() {
         console.log('rav-archive v1.0.0');
         return;
     }
+
+    // Só carrega o RavArchive se for um comando que precisa dele
+    const { RavArchive } = require('./index');
+    const fileCommand = require('./commands/file');
+    const urlCommand = require('./commands/url');
+    const batchCommand = require('./commands/batch');
+    const checkCommand = require('./commands/check');
+    const statsCommand = require('./commands/stats');
 
     const archive = new RavArchive();
 
