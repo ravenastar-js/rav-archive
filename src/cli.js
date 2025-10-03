@@ -2,22 +2,27 @@
 
 const { showBanner, showHelp } = require('./utils/logger');
 
-async function main() {
+function main() {
     const args = process.argv.slice(2);
     
     // Mostrar ajuda se não há argumentos ou se pede ajuda
     if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
         showBanner();
         showHelp();
-        return;
+        process.exit(0);
     }
 
     // Mostrar versão
     if (args[0] === '--version' || args[0] === '-v') {
         console.log('rav-archive v1.0.0');
-        return;
+        process.exit(0);
     }
 
+    // Para outros comandos, carregar assincronamente
+    loadCommands(args);
+}
+
+async function loadCommands(args) {
     // Só carrega o RavArchive se for um comando que precisa dele
     const { RavArchive } = require('./index');
     const fileCommand = require('./commands/file');
@@ -52,7 +57,9 @@ async function main() {
 
             default:
                 showBanner();
+                console.log(`❌ Comando desconhecido: ${args[0]}\n`);
                 showHelp();
+                process.exit(1);
         }
     } catch (error) {
         console.error('💥 Erro:', error.message);
@@ -60,11 +67,9 @@ async function main() {
     }
 }
 
+// Executar apenas se for o módulo principal
 if (require.main === module) {
-    main().catch(error => {
-        console.error('💥 Erro fatal:', error);
-        process.exit(1);
-    });
+    main();
 }
 
 module.exports = { main };
