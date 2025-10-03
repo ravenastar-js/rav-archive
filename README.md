@@ -63,7 +63,7 @@ rav-archive --help
 <details>
 <summary>📥 Instalação inicial (GIF)</summary>
  
-![Raveninsta](https://github.com/ravenastar-js/rav-archive/blob/main/media/rav-archive.gif)
+![rav-archive](https://github.com/ravenastar-js/rav-archive/blob/save/media/rav-archive.gif)
 </details>
 
 ## 🔍 VERIFICAR INSTALAÇÃO
