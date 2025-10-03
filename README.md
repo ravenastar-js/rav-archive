@@ -66,16 +66,16 @@ tar -xf rav-archive.zip && cd rav-archive
 
 ## 🔍 VERIFICAR INSTALAÇÃO
 ```bash
-npm ls -g rav-archive        # ✅ Listar pacote
-npm list -g rav-archive       # ✅ Completo
-rav-archive --version         # ✅ Versão instalada
+npm ls -g rav-archive          # ✅ Listar pacote
+npm list -g rav-archive        # ✅ Completo
+rav-archive --version          # ✅ Versão instalada
 ```
 
 ## 🗑️ DESINSTALAR GLOBALMENTE
 ```bash
-npm un -g rav-archive         # ✅ Recomendado  
-npm uninstall -g rav-archive  # ✅ Completo
-npm remove -g rav-archive     # ✅ Alternativo
+npm un -g rav-archive          # ✅ Recomendado  
+npm uninstall -g rav-archive   # ✅ Completo
+npm remove -g rav-archive      # ✅ Alternativo
 ```
 
 ### 🛠️ **Uso Imediato**
