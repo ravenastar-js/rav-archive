@@ -600,7 +600,7 @@ class SmartArchiveChecker {
 
         const page = await this.browser.newPage();
 
-        // 📝 DECLARAR logEntry FORA do bloco try para que esteja acessível no catch
+        // 📝 DECLARAR logEntry FORA do bloco try
         const logEntry = {
             timestamp: new Date().toISOString(),
             service: 'wayback',
@@ -664,11 +664,14 @@ class SmartArchiveChecker {
                 this.updateProgressLog(url, snapshotUrl);
                 await page.close();
 
-                // 💾 SALVAR LOG APÓS SUCESSO
+                // 💾 SALVAR LOG
                 this.detailedLogs.push(logEntry);
                 this.saveIncrementalReport();
 
-                return { success: true, snapshotUrl: snapshotUrl };
+                return {
+                    success: true,
+                    snapshotUrl: snapshotUrl,
+                };
             }
 
             if (this.isValidSnapshotUrl(currentUrl)) {
@@ -680,11 +683,15 @@ class SmartArchiveChecker {
                 this.updateProgressLog(url, currentUrl);
                 await page.close();
 
-                // 💾 SALVAR LOG APÓS SUCESSO
+                // 💾 SALVAR LOG
                 this.detailedLogs.push(logEntry);
                 this.saveIncrementalReport();
 
-                return { success: true, snapshotUrl: currentUrl };
+                return {
+                    success: true,
+                    snapshotUrl: currentUrl,
+                    archived: true // ← ADICIONAR esta linha para compatibilidade
+                };
             }
 
             const submitButton = await page.$('input[type="submit"], button[type="submit"]');
@@ -703,11 +710,15 @@ class SmartArchiveChecker {
                     this.updateProgressLog(url, newUrl);
                     await page.close();
 
-                    // 💾 SALVAR LOG APÓS SUCESSO
+                    // 💾 SALVAR LOG
                     this.detailedLogs.push(logEntry);
                     this.saveIncrementalReport();
 
-                    return { success: true, snapshotUrl: newUrl };
+                    return {
+                        success: true,
+                        snapshotUrl: newUrl,
+                        archived: true // ← ADICIONAR esta linha para compatibilidade
+                    };
                 }
             }
 
@@ -720,7 +731,7 @@ class SmartArchiveChecker {
 
             this.printError(`Erro: ${error.message}`);
 
-            // 💾 SALVAR LOG APÓS ERRO (ANTES de fazer retry)
+            // 💾 SALVAR LOG
             this.detailedLogs.push(logEntry);
             this.saveIncrementalReport();
 
@@ -806,23 +817,26 @@ class SmartArchiveChecker {
     }
 
     /**
-     * 📊 Atualiza resultados do processamento
-     * @param {string} url - URL processada
-     * @param {Object} result - Resultado do processamento
-     */
+   * 📊 Atualiza resultados do processamento
+   * @param {string} url - URL processada
+   * @param {Object} result - Resultado do processamento
+   */
     updateResults(url, result) {
         const resultEntry = {
             id: this.currentId.toString(),
             originalUrl: url,
             timestamp: new Date().toISOString(),
             title: this.extractTitleFromUrl(url),
-            status: result.archived || result.success ? "success" : "failed"
+            status: "failed" // padrão para failed
         };
 
-        if (result.archived || result.success) {
-            resultEntry.archiveUrl = result.snapshotUrl;
+        // 🔍 Verificar sucesso
+        if (result.success || result.archived) {
+            resultEntry.status = "success";
+            resultEntry.archiveUrl = result.snapshotUrl || result.archiveUrl;
             this.results.results.archived.push(resultEntry);
             this.results.metadata.summary.archived++;
+            this.printSuccess(`URL arquivada com sucesso: ${url}`);
         } else {
             resultEntry.error = result.error || {
                 type: "unknown",
@@ -831,6 +845,7 @@ class SmartArchiveChecker {
             };
             this.results.results.failed.push(resultEntry);
             this.results.metadata.summary.failed++;
+            this.printError(`❌ Falha ao arquivar: ${url}`);
         }
 
         this.results.metadata.summary.pending--;
@@ -863,16 +878,11 @@ class SmartArchiveChecker {
     }
 
     /**
-   * 🔄 Processa lista de URLs
-   * @param {string[]} links - Array de URLs
-   * @returns {Promise<Object>} Resultados do processamento
-   */
-    async processUrls(links, options = {}) {
-        const {
-            forceArchive = true,
-            checkExisting = false
-        } = options;
-
+  * 🔄 Processa lista de URLs
+  * @param {string[]} links - Array de URLs
+  * @returns {Promise<Object>} Resultados do processamento
+  */
+    async processUrls(links) {
         // 📁 Criar pastas apenas quando for processar
         this.ensureDataDirectory();
         this.cleanupRedundantFiles();
@@ -915,13 +925,19 @@ class SmartArchiveChecker {
                 this.printProgress(i + 1, links.length, url, attempts.wayback);
 
                 try {
-                    // 🔄 SEMPRE arquivar, independente de snapshot existente
+                    // 🔄 SEMPRE arquivar
                     this.printMessage('🔄', 'Iniciando arquivamento...');
 
                     const archiveResult = await this.tryArchiveUrl(url);
 
+                    // ✅ Processar resultado do arquivamento
                     if (archiveResult.success) {
-                        this.updateResults(url, archiveResult);
+                        // Marcar tentativa como sucesso
+                        attempts.success = true;
+                        this.updateResults(url, {
+                            success: true,
+                            snapshotUrl: archiveResult.snapshotUrl
+                        });
                         this.printSuccess('Arquivado com sucesso!');
                     } else if (archiveResult.limitReached) {
                         this.updateResults(url, archiveResult);
@@ -935,7 +951,7 @@ class SmartArchiveChecker {
                 } catch (error) {
                     this.printError(`Erro ao processar URL: ${error.message}`);
 
-                    // 📝 Usar updateResults para capturar a URL mesmo em caso de erro
+                    // 📝 Capturar erro de processamento
                     this.updateResults(url, {
                         success: false,
                         error: {
@@ -972,24 +988,6 @@ class SmartArchiveChecker {
         return this.results;
     }
 
-    /**
-      * 📅 Extrai data do snapshot do Wayback
-      * @param {string} snapshotUrl - URL do snapshot
-      * @returns {string} Data no formato YYYY-MM-DD
-      */
-    extractSnapshotDate(snapshotUrl) {
-        try {
-            // Exemplo: http://web.archive.org/web/20251003020231/https://www.google.com/
-            const match = snapshotUrl.match(/\/web\/(\d{4})(\d{2})(\d{2})/);
-            if (match) {
-                const [_, year, month, day] = match;
-                return `${year}-${month}-${day}`;
-            }
-            return 'data-desconhecida';
-        } catch {
-            return 'data-desconhecida';
-        }
-    }
 
     /**
      * 📋 Gera relatório final

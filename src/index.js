@@ -21,14 +21,13 @@ class RavArchive {
      * 🔗 Arquivar uma única URL
      * @async
      * @param {string} url - URL para arquivar
-     * @param {Object} options - Opções de arquivamento
      * @returns {Promise<Object>} Resultado do arquivamento
      * @throws {Error} Se falhar no arquivamento
      */
-    async archiveUrl(url, options = {}) {
+    async archiveUrl(url) {
         try {
             await AutoInstaller.setupEnvironment();
-            const result = await this.checker.processUrls([url], options);
+            const result = await this.checker.processUrls([url]);
             return result;
         } catch (error) {
             throw new Error(`Falha ao arquivar URL: ${error.message}`);
@@ -39,14 +38,13 @@ class RavArchive {
      * 📦 Arquivar múltiplas URLs
      * @async
      * @param {string[]} urls - Array de URLs para arquivar
-     * @param {Object} options - Opções de arquivamento
      * @returns {Promise<Object>} Resultados do arquivamento
      * @throws {Error} Se falhar no arquivamento
      */
-    async archiveUrls(urls, options = {}) {
+    async archiveUrls(urls) {
         try {
             await AutoInstaller.setupEnvironment();
-            const result = await this.checker.processUrls(urls, options);
+            const result = await this.checker.processUrls(urls);
             return result;
         } catch (error) {
             throw new Error(`Falha ao arquivar URLs: ${error.message}`);
@@ -57,11 +55,10 @@ class RavArchive {
     * 📄 Arquivar URLs de um arquivo
     * @async
     * @param {string} filePath - Caminho do arquivo com URLs
-    * @param {Object} options - Opções de arquivamento
     * @returns {Promise<Object>} Resultados do arquivamento
     * @throws {Error} Se arquivo não existir ou for inválido
     */
-    async archiveFromFile(filePath, options = {}) {
+    async archiveFromFile(filePath) {
         try {
             await AutoInstaller.setupEnvironment();
             const fs = require('fs');
@@ -70,7 +67,7 @@ class RavArchive {
                 .map(url => url.trim())
                 .filter(url => url && this.isValidUrl(url));
 
-            const result = await this.checker.processUrls(urls, options);
+            const result = await this.checker.processUrls(urls);
             return result;
         } catch (error) {
             throw new Error(`Falha ao arquivar do arquivo: ${error.message}`);
