@@ -34,12 +34,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/seu-usuario/rav-archive.git"
+    "url": "git+https://github.com/ravenastar-js/rav-archive.git"
   },
-  "homepage": "https://github.com/seu-usuario/rav-archive#readme",
-  "bugs": {
-    "url": "https://github.com/seu-usuario/rav-archive/issues"
-  },
+  "homepage": "https://github.com/ravenastar-js/rav-archive#readme",
   "files": [
     "src/",
     "iniciar.bat",
