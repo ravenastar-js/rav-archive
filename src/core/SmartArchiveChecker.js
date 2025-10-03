@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { URL } = require('url');
 const ConnectionManager = require('./ConnectionManager');
+const { version } = require('../../package.json');
+
 
 /**
  * 🧠 Núcleo inteligente de arquivamento com múltiplas estratégias
@@ -18,7 +20,7 @@ class SmartArchiveChecker {
             browser: {
                 headless: true,
                 viewport: { width: 1280, height: 720 },
-                userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                userAgent: `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (RavArchive/${version})`,
                 args: [
                     '--no-sandbox',
                     '--disable-setuid-sandbox',

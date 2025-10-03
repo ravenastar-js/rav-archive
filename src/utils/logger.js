@@ -1,4 +1,5 @@
 const colors = require('../config/colors');
+const { version } = require('../../package.json');
 
 /**
  * 🎪 Exibe banner de abertura do sistema
@@ -6,7 +7,7 @@ const colors = require('../config/colors');
 function showBanner() {
     console.log(colors.apply(colors.magenta, '╔══════════════════════════════════════════════════════════════╗'));
     console.log(colors.apply(colors.magenta, '║                                                              ║'));
-    console.log(colors.apply(colors.cyan,    '║    🚀 RAV ARCHIVE ✨ V1                                    ║'));
+    console.log(colors.apply(colors.cyan,    `║    🚀 RAV ARCHIVE ✨ v${version}                                  ║`));
     console.log(colors.apply(colors.magenta, '║                                                              ║'));
     console.log(colors.apply(colors.blue,    '║    🌐 Arquivamento Automático - Wayback Machine            ║'));
     console.log(colors.apply(colors.green,   '║    ⚡ Biblioteca NPM + CLI                                  ║'));

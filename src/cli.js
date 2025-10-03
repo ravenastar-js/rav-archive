@@ -6,6 +6,7 @@
  */
 
 const { showBanner, showHelp } = require('./utils/logger');
+const { version } = require('../package.json');
 
 /**
  * 🎯 Função principal da CLI
@@ -22,7 +23,7 @@ function main() {
 
     // 📦 Mostrar versão
     if (args[0] === '--version' || args[0] === '-v') {
-        console.log('rav-archive v1.0.0');
+        console.log(`rav-archive v${version}`);
         process.exit(0);
     }
 
