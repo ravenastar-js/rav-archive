@@ -60,6 +60,12 @@ npm install -g rav-archive     # ✅ Completo
 rav-archive --help
 ```
 
+<details>
+<summary>📥 Instalação inicial (GIF)</summary>
+ 
+![Raveninsta](https://github.com/ravenastar-js/rav-archive/blob/main/media/rav-archive.gif)
+</details>
+
 ## 🔍 VERIFICAR INSTALAÇÃO
 ```bash
 npm ls -g rav-archive          # ✅ Listar pacote
