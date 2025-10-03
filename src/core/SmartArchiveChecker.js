@@ -849,7 +849,12 @@ class SmartArchiveChecker {
      * @param {string[]} links - Array de URLs
      * @returns {Promise<Object>} Resultados do processamento
      */
-    async processUrls(links) {
+    async processUrls(links, options = {}) {
+        const {
+            forceArchive = true,
+            checkExisting = false
+        } = options;
+
         // 📁 Criar pastas apenas quando for processar
         this.ensureDataDirectory();
         this.cleanupRedundantFiles();
@@ -892,13 +897,40 @@ class SmartArchiveChecker {
                 this.printProgress(i + 1, links.length, url, attempts.wayback);
 
                 try {
-                    const checkResult = await this.checkIfArchived(url);
+                    let shouldArchive = true;
+                    let existingSnapshot = null;
 
-                    if (checkResult.archived) {
-                        this.updateResults(url, checkResult);
-                        this.updateProgressLog(url, checkResult.snapshotUrl);
-                        this.printSuccess('URL já arquivada!');
-                    } else {
+                    if (checkExisting && !forceArchive) {
+                        const checkResult = await this.checkIfArchived(url);
+
+                        if (checkResult.archived) {
+                            existingSnapshot = checkResult.snapshotUrl;
+                            const snapshotDate = this.extractSnapshotDate(existingSnapshot);
+                            const today = new Date().toISOString().split('T')[0];
+
+                            if (snapshotDate === today) {
+                                // ✅ Snapshot de hoje - considerar como sucesso
+                                this.updateResults(url, {
+                                    archived: true,
+                                    snapshotUrl: existingSnapshot,
+                                    existing: true
+                                });
+                                this.updateProgressLog(url, existingSnapshot);
+                                this.printSuccess('URL já arquivada HOJE!');
+                                shouldArchive = false;
+                            } else {
+                                // 📅 Snapshot antigo - perguntar ou arquivar
+                                this.printWarning(`Snapshot existente de ${snapshotDate} (hoje é ${today})`);
+                                shouldArchive = true;
+                            }
+                        }
+                    }
+
+                    if (shouldArchive) {
+                        if (existingSnapshot) {
+                            this.printMessage('🔄', 'Arquivando novamente (snapshot antigo)...');
+                        }
+
                         const archiveResult = await this.tryArchiveUrl(url);
 
                         if (archiveResult.success) {
@@ -913,6 +945,7 @@ class SmartArchiveChecker {
                             this.printError(`Falha: ${archiveResult.error?.message}`);
                         }
                     }
+
                 } catch (error) {
                     this.printError(`Erro ao processar URL: ${error.message}`);
                     this.updateResults(url, {
@@ -951,6 +984,24 @@ class SmartArchiveChecker {
         return this.results;
     }
 
+    /**
+      * 📅 Extrai data do snapshot do Wayback
+      * @param {string} snapshotUrl - URL do snapshot
+      * @returns {string} Data no formato YYYY-MM-DD
+      */
+    extractSnapshotDate(snapshotUrl) {
+        try {
+            // Exemplo: http://web.archive.org/web/20251003020231/https://www.google.com/
+            const match = snapshotUrl.match(/\/web\/(\d{4})(\d{2})(\d{2})/);
+            if (match) {
+                const [_, year, month, day] = match;
+                return `${year}-${month}-${day}`;
+            }
+            return 'data-desconhecida';
+        } catch {
+            return 'data-desconhecida';
+        }
+    }
 
     /**
      * 📋 Gera relatório final
