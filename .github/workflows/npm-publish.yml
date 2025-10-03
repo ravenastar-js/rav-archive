@@ -94,7 +94,7 @@ jobs:
             echo "💾 Comitando mudanças..."
             git add package.json
             git commit -m "🤖 RAV Archive: version ${{ steps.next_version.outputs.new_version }} [skip ci]"
-            git push origin main
+            git push origin save
             echo "✅ Mudanças commitadas e enviadas"
           fi
 
