@@ -1,10 +1,10 @@
 {
   "name": "rav-archive",
-  "version": "1.0.0-4",
+  "version": "1.0.0-5",
   "description": "📦✨ Biblioteca para arquivamento automático de URLs no Wayback Machine usando Playwright",
   "main": "src/index.js",
   "bin": {
-    "rav-archive": "./src/bin/rav-archive.js"
+    "rav-archive": "src/bin/rav-archive.js"
   },
   "scripts": {
     "start": "node src/cli.js",
