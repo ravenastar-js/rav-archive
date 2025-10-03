@@ -111,45 +111,6 @@ iniciar.bat
 
 ---
 
-## 📋 Índice Rápido
-
-<details>
-<summary><strong>🚀 Comece Aqui</strong></summary>
-
-- [Instalação Rápida](#-começando-em-30-segundos)
-- [Primeiros Passos](#-primeiros-passos)
-- [Exemplos Práticos](#-exemplos-práticos)
-
-</details>
-
-<details>
-<summary><strong>⚡ Funcionalidades</strong></summary>
-
-- [Recursos Principais](#-recursos-principais)
-- [Modos de Uso](#-modos-de-uso)
-- [Resultados](#-resultados-e-relatórios)
-
-</details>
-
-<details>
-<summary><strong>🛠️ Uso Avançado</strong></summary>
-
-- [Como Biblioteca](#-como-biblioteca)
-- [Como CLI](#-como-cli)
-- [Configuração](#-configuração)
-
-</details>
-
-<details>
-<summary><strong>📁 Estrutura</strong></summary>
-
-- [Arquitetura](#-arquitetura)
-- [Arquivos](#-estrutura-de-arquivos)
-
-</details>
-
----
-
 ## 🏁 Primeiros Passos
 
 ### 1. **Prepare suas URLs**
@@ -422,17 +383,7 @@ npx playwright install
 
 ## 📄 Licença
 
-Este projeto está sob licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para detalhes completos.
-
-### ✅ **Permissões**
-- Uso comercial
-- Modificação
-- Distribuição
-- Uso privado
-
-### 📝 **Condições**
-- Atribuição obrigatória
-- Incluir licença original
+Este projeto está sob licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
 
 ---
 
@@ -466,9 +417,7 @@ O sistema faz **até 4 tentativas** com retry automático antes de marcar como f
 
 <div align="center">
 
-## 💚 Desenvolvido com paixão por [RavenaStar](https://github.com/ravenastar-js)
-
-**Preservando a web, uma URL de cada vez** 🌐
+## Feito com 💚 por [RavenaStar](https://linktr.ee/ravenastar)
 
 [⬆ Voltar ao topo](#-rav-archive)
 
