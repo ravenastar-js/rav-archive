@@ -1,8 +1,14 @@
+/**
+ * ⚙️ Configurações e constantes globais do Rav Archive
+ * @module Constants
+ */
 module.exports = {
+    // 🌐 URLs base do Wayback Machine
     WAYBACK_BASE_URL: 'https://web.archive.org',
     WAYBACK_SAVE_URL: 'https://web.archive.org/save/',
     WAYBACK_AVAILABLE_URL: 'https://archive.org/wayback/available',
     
+    // 🚨 Tipos de erros do sistema
     ERROR_TYPES: {
         CHECK_ERROR: 'check_error',
         ARCHIVE_ERROR: 'archive_error',
@@ -12,6 +18,7 @@ module.exports = {
         UNKNOWN_ERROR: 'unknown_error'
     },
     
+    // 📊 Status possíveis do processo de arquivamento
     STATUS: {
         NO_DATA: 'no_data',
         IN_PROGRESS: 'in_progress',
@@ -20,6 +27,7 @@ module.exports = {
         ERROR: 'error'
     },
     
+    // 💬 Mensagens padronizadas do sistema
     MESSAGES: {
         NO_DATA: 'Nenhum dado de arquivamento encontrado.',
         EXECUTE_FIRST: 'Execute primeiro: rav-archive file links.txt',

@@ -1,7 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 
+/**
+ * 📁 Gerenciador de operações de arquivo do sistema
+ * @class FileManager
+ */
 class FileManager {
+    /**
+     * 📂 Garante que diretório existe
+     * @static
+     * @param {string} dirPath - Caminho do diretório
+     * @returns {boolean} True se diretório foi criado
+     */
     static ensureDirectory(dirPath) {
         if (!fs.existsSync(dirPath)) {
             fs.mkdirSync(dirPath, { recursive: true });
@@ -10,6 +20,13 @@ class FileManager {
         return false;
     }
 
+    /**
+     * 📄 Lê URLs de arquivo de texto
+     * @static
+     * @param {string} filePath - Caminho do arquivo
+     * @returns {string[]} Array de URLs válidas
+     * @throws {Error} Se arquivo não existir ou for inválido
+     */
     static readUrlsFromFile(filePath) {
         try {
             const data = fs.readFileSync(filePath, 'utf8');
@@ -21,6 +38,14 @@ class FileManager {
         }
     }
 
+    /**
+     * 💾 Escreve dados em arquivo JSON
+     * @static
+     * @param {string} filePath - Caminho do arquivo
+     * @param {Object} data - Dados a serem escritos
+     * @returns {boolean} True se escrita bem-sucedida
+     * @throws {Error} Se falhar na escrita
+     */
     static writeJsonFile(filePath, data) {
         try {
             fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
@@ -30,6 +55,13 @@ class FileManager {
         }
     }
 
+    /**
+     * 📖 Lê dados de arquivo JSON
+     * @static
+     * @param {string} filePath - Caminho do arquivo
+     * @returns {Object} Dados parseados do JSON
+     * @throws {Error} Se arquivo não existir ou JSON inválido
+     */
     static readJsonFile(filePath) {
         try {
             const data = fs.readFileSync(filePath, 'utf8');
@@ -39,6 +71,13 @@ class FileManager {
         }
     }
 
+    /**
+     * 🧹 Limpa arquivos por padrão regex
+     * @static
+     * @param {string} directory - Diretório a limpar
+     * @param {RegExp} pattern - Padrão para seleção de arquivos
+     * @returns {number} Quantidade de arquivos removidos
+     */
     static cleanupFiles(directory, pattern) {
         try {
             if (!fs.existsSync(directory)) return 0;

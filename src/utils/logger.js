@@ -1,5 +1,8 @@
 const colors = require('../config/colors');
 
+/**
+ * 🎪 Exibe banner de abertura do sistema
+ */
 function showBanner() {
     console.log(colors.apply(colors.magenta, '╔══════════════════════════════════════════════════════════════╗'));
     console.log(colors.apply(colors.magenta, '║                                                              ║'));
@@ -12,6 +15,10 @@ function showBanner() {
     console.log('');
 }
 
+/**
+ * 📊 Exibe resultados do processamento
+ * @param {Object} result - Resultados do arquivamento
+ */
 function showResults(result) {
     console.log('\n' + colors.apply(colors.green, '📊 RESULTADOS:'));
     console.log(colors.apply(colors.blue, '├── URLs processadas:'), result.metadata.summary.total);
@@ -21,13 +28,19 @@ function showResults(result) {
         ((result.metadata.summary.archived / result.metadata.summary.total) * 100).toFixed(1) + '%');
 }
 
+/**
+ * 📈 Exibe estatísticas do sistema
+ * @param {Object} stats - Estatísticas a serem exibidas
+ */
 function showStats(stats) {
+    // 📭 Verificar se há dados para exibir
     if (stats.summary.total === 0) {
         console.log(colors.apply(colors.yellow, '📊 Nenhum dado de arquivamento encontrado.'));
         console.log(colors.apply(colors.cyan, '💡 Execute primeiro: rav-archive file links.txt'));
         return;
     }
 
+    // 📋 Exibir estatísticas detalhadas
     console.log(colors.apply(colors.cyan, '\n📊 ESTATÍSTICAS RAV-ARCHIVE:'));
     console.log(colors.apply(colors.blue, '├── Status:'), stats.status);
     console.log(colors.apply(colors.green, '├── URLs processadas:'), stats.summary.total);
@@ -37,6 +50,9 @@ function showStats(stats) {
         ((stats.summary.archived / stats.summary.total) * 100).toFixed(1) + '%');
 }
 
+/**
+ * ❓ Exibe ajuda do sistema com comandos disponíveis
+ */
 function showHelp() {
     console.log(colors.apply(colors.cyan, '📖 USO:'));
     console.log(colors.apply(colors.yellow, '  rav-archive [comando] [argumento]\n'));

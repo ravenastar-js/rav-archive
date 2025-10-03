@@ -1,18 +1,25 @@
 const { showBanner, colors } = require('../utils/logger');
 
+/**
+ * 📊 Comando para exibir estatísticas do arquivamento
+ * @param {Object} archive - Instância do arquivador
+ * @returns {Promise<void>}
+ */
 module.exports = async function statsCommand(archive) {
     showBanner();
     
     try {
+        // 📈 Obter estatísticas do arquivador
         const stats = archive.getStats();
         
-        // Verificar se existem dados antes de mostrar
+        // 🔍 Verificar se existem dados antes de mostrar
         if (stats.summary.total === 0) {
             console.log(colors.apply(colors.yellow, '📊 Nenhum dado de arquivamento encontrado.'));
             console.log(colors.apply(colors.cyan, '💡 Execute primeiro: rav-archive file links.txt'));
             return;
         }
 
+        // 🎪 Exibir estatísticas principais
         console.log(colors.apply(colors.cyan, '\n📊 ESTATÍSTICAS RAV-ARCHIVE:'));
         console.log(colors.apply(colors.blue, '├── Status:'), stats.status);
         console.log(colors.apply(colors.green, '├── URLs processadas:'), stats.summary.total);
@@ -21,7 +28,7 @@ module.exports = async function statsCommand(archive) {
         console.log(colors.apply(colors.cyan, '└── Taxa de sucesso:'), 
             ((stats.summary.archived / stats.summary.total) * 100).toFixed(1) + '%');
             
-        // Mostrar algumas URLs de sucesso se houver
+        // 📋 Mostrar algumas URLs de sucesso se houver
         if (stats.successfulUrls && stats.successfulUrls.length > 0) {
             console.log(colors.apply(colors.green, `\n📋 URLs arquivadas com sucesso: ${stats.successfulUrls.length}`));
             stats.successfulUrls.slice(0, 3).forEach((url, index) => {
@@ -32,6 +39,7 @@ module.exports = async function statsCommand(archive) {
             }
         }
     } catch (error) {
+        // 🚨 Tratamento para quando não há dados disponíveis
         console.log(colors.apply(colors.yellow, '📊 Nenhum dado de arquivamento encontrado.'));
         console.log(colors.apply(colors.cyan, '💡 Execute primeiro: rav-archive file links.txt'));
     }

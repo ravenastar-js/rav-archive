@@ -3,8 +3,17 @@ const path = require('path');
 const { URL } = require('url');
 const ConnectionManager = require('./ConnectionManager');
 
+/**
+ * 🧠 Núcleo inteligente de arquivamento com múltiplas estratégias
+ * @class SmartArchiveChecker
+ */
 class SmartArchiveChecker {
+    /**
+     * 🏗️ Construtor do arquivador inteligente
+     * @param {Object} config - Configurações personalizadas
+     */
     constructor(config = {}) {
+        // ⚙️ Configurações padrão do sistema
         const defaultConfig = {
             browser: {
                 headless: true,
@@ -32,12 +41,15 @@ class SmartArchiveChecker {
             }
         };
 
+        // 🔄 Mescla configurações
         this.config = this.deepMerge(defaultConfig, config);
-        
+
+        // 📁 Configuração de diretórios
         this.dataDir = this.config.directories.data;
         this.docsDir = this.config.directories.docs;
         this.connectionManager = new ConnectionManager();
-        
+
+        // 📊 Estrutura de resultados
         this.results = {
             metadata: {
                 timestamp: new Date().toISOString(),
@@ -47,6 +59,7 @@ class SmartArchiveChecker {
             results: { archived: [], failed: [] }
         };
 
+        // 🖥️ Estado do navegador
         this.browser = null;
         this.currentId = 1;
         this.consecutiveFailures = 0;
@@ -62,6 +75,12 @@ class SmartArchiveChecker {
         };
     }
 
+    /**
+     * 🔄 Mescla profunda de objetos
+     * @param {Object} target - Objeto alvo
+     * @param {Object} source - Objeto fonte
+     * @returns {Object} Objeto mesclado
+     */
     deepMerge(target, source) {
         const result = { ...target };
         for (const key in source) {
@@ -74,6 +93,9 @@ class SmartArchiveChecker {
         return result;
     }
 
+    /**
+     * 📁 Garante existência dos diretórios de dados
+     */
     ensureDataDirectory() {
         if (!fs.existsSync(this.dataDir)) {
             fs.mkdirSync(this.dataDir, { recursive: true });
@@ -85,6 +107,9 @@ class SmartArchiveChecker {
         }
     }
 
+    /**
+     * 🧹 Remove arquivos redundantes
+     */
     cleanupRedundantFiles() {
         try {
             if (fs.existsSync(this.dataDir)) {
@@ -110,23 +135,60 @@ class SmartArchiveChecker {
         }
     }
 
+    /**
+     * 🌐 Inicializa e valida conexão
+     * @async
+     */
     async initializeConnection() {
         console.log('🔗 CONFIGURANDO CONEXÃO...');
         await this.connectionManager.initializeConnection();
         console.log('⚡ Conexão configurada - Delays otimizados');
     }
 
+    /**
+     * 🖥️ Inicializa navegador Playwright
+     * @async
+     * @throws {Error} Se falhar ao iniciar navegador
+     */
     async initBrowser() {
         try {
             const { chromium } = require('playwright');
-            this.browser = await chromium.launch(this.config.browser);
+
+            let browserArgs = [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-blink-features=AutomationControlled',
+                '--disable-features=VizDisplayCompositor',
+                '--disable-background-timer-throttling',
+                '--disable-renderer-backgrounding'
+            ];
+
+            if (this.config.browser.args && Array.isArray(this.config.browser.args)) {
+                browserArgs = [...browserArgs, ...this.config.browser.args];
+            }
+
+            const browserConfig = {
+                headless: this.config.browser.headless,
+                viewport: this.config.browser.viewport,
+                args: browserArgs
+            };
+
+            this.browser = await chromium.launch(browserConfig);
             this.printSuccess('Navegador configurado com sucesso');
         } catch (error) {
             this.printError('Erro ao iniciar navegador:', error.message);
+            console.error('Detalhes do erro:', error);
             throw error;
         }
     }
 
+    /**
+     * 📄 Carrega links de arquivo
+     * @param {string} filename - Caminho do arquivo
+     * @returns {Promise<string[]>} Array de URLs válidas
+     * @throws {Error} Se arquivo não existir ou for inválido
+     */
     async loadLinks(filename) {
         try {
             const data = await fs.promises.readFile(filename, 'utf8');
@@ -153,6 +215,11 @@ class SmartArchiveChecker {
         }
     }
 
+    /**
+     * 🔍 Valida formato de URL
+     * @param {string} url - URL a ser validada
+     * @returns {boolean} True se URL for válida
+     */
     validateUrl(url) {
         try {
             new URL(url);
@@ -163,20 +230,42 @@ class SmartArchiveChecker {
         }
     }
 
+    /**
+     * ⏰ Obtém delay dinâmico
+     * @returns {Promise<number>} Delay em milissegundos
+     */
     async getDynamicDelay() {
         return this.connectionManager.getDynamicDelay(this.config.wayback.baseDelay);
     }
 
+    /**
+     * ⏳ Delay assíncrono
+     * @param {number} ms - Milissegundos
+     * @returns {Promise<void>}
+     */
     async delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    /**
+     * ⏰ Delay humanizado com randomização
+     * @param {number} min - Mínimo em ms
+     * @param {number} max - Máximo em ms
+     * @returns {Promise<void>}
+     */
     async humanDelay(min = 3000, max = 8000) {
         const delay = Math.floor(Math.random() * (max - min + 1)) + min;
         this.printMessage('⏳', `Aguardando ${delay}ms...`);
         await new Promise(resolve => setTimeout(resolve, delay));
     }
 
+    /**
+     * 🌐 Navegação segura para URL
+     * @param {Object} page - Página Playwright
+     * @param {string} url - URL destino
+     * @param {Object} options - Opções de navegação
+     * @returns {Promise<Object>} Resultado da navegação
+     */
     async safeGoto(page, url, options = {}) {
         try {
             const defaultOptions = {
@@ -200,6 +289,12 @@ class SmartArchiveChecker {
         }
     }
 
+    /**
+     * 🚫 Verifica limite do Wayback Machine
+     * @param {Object} page - Página Playwright
+     * @param {string} url - URL sendo processada
+     * @returns {Promise<boolean>} True se limite atingido
+     */
     async checkWaybackLimit(page, url) {
         const attempts = this.urlAttempts.get(url);
         if (attempts.wayback >= this.config.wayback.maxAttemptsPerUrl) {
@@ -232,6 +327,11 @@ class SmartArchiveChecker {
         }
     }
 
+    /**
+     * 📸 Extrai informações do snapshot
+     * @param {Object} page - Página Playwright
+     * @returns {Promise<string|null>} URL do snapshot ou null
+     */
     async extractWaybackSnapshotInfo(page) {
         try {
             await page.waitForTimeout(3000);
@@ -297,8 +397,13 @@ class SmartArchiveChecker {
         }
     }
 
-       async checkIfArchived(url) {
-
+    /**
+     * 🔍 Verifica se URL já está arquivada
+     * @param {string} url - URL a verificar
+     * @returns {Promise<Object>} Resultado da verificação
+     */
+    async checkIfArchived(url) {
+        // 🖥️ Garantir que o navegador está inicializado
         if (!this.browser) {
             await this.initBrowser();
         }
@@ -309,47 +414,90 @@ class SmartArchiveChecker {
             const page = await this.browser.newPage();
 
             try {
+                // 🌐 Configurar userAgent
+                await page.setExtraHTTPHeaders({
+                    'User-Agent': this.config.browser.userAgent
+                });
+
                 console.log(`🔍 [${retries + 1}/${this.config.wayback.maxRetries}] Verificando: ${this.truncateUrl(url)}`);
 
+                // 📡 URL da API do Wayback Machine
                 const checkUrl = `https://archive.org/wayback/available?url=${encodeURIComponent(url)}`;
 
-                await page.goto(checkUrl, {
-                    waitUntil: 'domcontentloaded',
+                console.log(`📡 Consultando API: ${checkUrl}`);
+
+                // 🔄 Fazer requisição para API
+                const response = await page.goto(checkUrl, {
+                    waitUntil: 'networkidle',
                     timeout: this.config.wayback.timeout
                 });
 
-                const dynamicDelay = await this.getDynamicDelay();
-                await this.delay(dynamicDelay);
+                if (!response || !response.ok()) {
+                    console.log(`❌ Resposta da API não OK: ${response?.status()}`);
+                    throw new Error(`Falha na requisição: ${response?.status()}`);
+                }
 
-                const content = await page.content();
+                // 📄 Obter conteúdo JSON da resposta
+                const content = await page.textContent('pre, body');
 
-                if (content.includes('archived_snapshots') && content.includes('available')) {
-                    const snapshotMatch = content.match(/"url":"(https?:\/\/web\.archive\.org\/web\/\d+\/[^"]*)"/);
+                if (!content) {
+                    throw new Error('Resposta vazia da API');
+                }
 
-                    if (snapshotMatch && snapshotMatch[1]) {
+                console.log(`📄 Resposta da API: ${content.substring(0, 200)}...`);
+
+                // 🔍 Verificar se é JSON válido
+                let jsonData;
+                try {
+                    jsonData = JSON.parse(content);
+                } catch (parseError) {
+                    console.log('❌ Não é JSON válido, tentando extrair texto...');
+                    // 🔎 Tentar encontrar URLs de snapshot no HTML
+                    const snapshotMatch = content.match(/https:\/\/web\.archive\.org\/web\/\d+\/[^"'\s]+/);
+                    if (snapshotMatch) {
                         await page.close();
-                        console.log(`✅ Já arquivada: ${this.truncateUrl(snapshotMatch[1])}`);
+                        console.log(`✅ URL arquivada (encontrada via regex): ${snapshotMatch[0]}`);
+                        return { archived: true, snapshotUrl: snapshotMatch[0] };
+                    }
+                    throw new Error('Resposta não é JSON válido');
+                }
+
+                // 📊 Verificar estrutura da API
+                if (jsonData.archived_snapshots && jsonData.archived_snapshots.closest) {
+                    const snapshot = jsonData.archived_snapshots.closest;
+                    if (snapshot.available && snapshot.url) {
+                        await page.close();
+                        console.log(`✅ URL já arquivada: ${snapshot.url}`);
                         this.consecutiveFailures = 0;
-                        return { archived: true, snapshotUrl: snapshotMatch[1] };
+                        return { archived: true, snapshotUrl: snapshot.url };
                     }
                 }
 
                 await page.close();
 
+                // 🔄 Tentar método alternativo
                 if (retries === 0) {
+                    console.log('🔄 Tentando método alternativo...');
                     const altResult = await this.alternativeCheck(url);
-                    if (altResult.archived) return altResult;
+                    if (altResult.archived) {
+                        console.log('✅ URL arquivada (método alternativo)');
+                        return altResult;
+                    }
                 }
 
+                console.log('❌ URL não encontrada nos arquivos');
                 return { archived: false };
 
             } catch (error) {
                 await page.close().catch(() => { });
 
+                console.log(`❌ Erro na verificação: ${error.message}`);
+
                 if (retries < this.config.wayback.maxRetries - 1) {
                     retries++;
-                    console.log(`🔄 Tentativa ${retries} falhou, retry em 5s...`);
-                    await this.delay(5000);
+                    const retryDelay = 5000;
+                    console.log(`🔄 Tentativa ${retries + 1} em ${retryDelay / 1000}s...`);
+                    await this.delay(retryDelay);
                 } else {
                     console.log(`❌ Falha na verificação após ${this.config.wayback.maxRetries} tentativas`);
                     return {
@@ -363,37 +511,75 @@ class SmartArchiveChecker {
                 }
             }
         }
+
+        return { archived: false };
     }
 
+    /**
+     * 🔄 Método alternativo de verificação
+     * @param {string} url - URL a verificar
+     * @returns {Promise<Object>} Resultado da verificação
+     */
     async alternativeCheck(url) {
         const page = await this.browser.newPage();
 
         try {
-            const directUrl = `https://web.archive.org/web/${new Date().getFullYear()}0000000000*/${url}`;
+            await page.setExtraHTTPHeaders({
+                'User-Agent': this.config.browser.userAgent
+            });
+
+            const directUrl = `https://web.archive.org/web/*/${url}`;
+            console.log(`🔍 Método alternativo: ${directUrl}`);
 
             await page.goto(directUrl, {
                 waitUntil: 'domcontentloaded',
                 timeout: 30000
             });
 
-            const dynamicDelay = await this.getDynamicDelay();
-            await this.delay(dynamicDelay);
+            await this.delay(3000);
 
             const currentUrl = page.url();
+            console.log(`📍 URL atual: ${currentUrl}`);
 
             if (currentUrl.includes('/web/') && currentUrl.match(/\/web\/\d{14}\//)) {
                 await page.close();
+                console.log(`✅ URL arquivada (redirecionamento): ${currentUrl}`);
                 return { archived: true, snapshotUrl: currentUrl };
+            }
+
+            const snapshotLink = await page.evaluate(() => {
+                const links = Array.from(document.querySelectorAll('a[href*="/web/"]'));
+                for (let link of links) {
+                    const href = link.getAttribute('href');
+                    if (href && href.includes('/web/') && href.match(/\/web\/\d{14}\//)) {
+                        return href.startsWith('http') ? href : `https://web.archive.org${href}`;
+                    }
+                }
+                return null;
+            });
+
+            if (snapshotLink) {
+                await page.close();
+                console.log(`✅ URL arquivada (link encontrado): ${snapshotLink}`);
+                return { archived: true, snapshotUrl: snapshotLink };
             }
 
             await page.close();
             return { archived: false };
+
         } catch (error) {
             await page.close().catch(() => { });
+            console.log(`❌ Erro no método alternativo: ${error.message}`);
             return { archived: false };
         }
     }
 
+    /**
+     * 💾 Tenta arquivar URL no Wayback Machine
+     * @param {string} url - URL a arquivar
+     * @param {number} retryCount - Contador de tentativas
+     * @returns {Promise<Object>} Resultado do arquivamento
+     */
     async tryArchiveUrl(url, retryCount = 0) {
         const attempts = this.urlAttempts.get(url);
 
@@ -412,15 +598,20 @@ class SmartArchiveChecker {
         attempts.lastAttempt = new Date();
 
         const page = await this.browser.newPage();
-        const logEntry = {
-            timestamp: new Date().toISOString(),
-            service: 'wayback',
-            url: url,
-            attempt: attempts.wayback,
-            details: {}
-        };
 
         try {
+            await page.setExtraHTTPHeaders({
+                'User-Agent': this.config.browser.userAgent
+            });
+
+            const logEntry = {
+                timestamp: new Date().toISOString(),
+                service: 'wayback',
+                url: url,
+                attempt: attempts.wayback,
+                details: {}
+            };
+
             this.printSection('WAYBACK MACHINE', url);
             this.printMessage('📊', `Tentativa ${attempts.wayback}/${this.config.wayback.maxAttemptsPerUrl}`);
 
@@ -544,6 +735,11 @@ class SmartArchiveChecker {
         }
     }
 
+    /**
+     * 🚫 Verifica se limite foi atingido
+     * @param {string} pageText - Texto da página
+     * @returns {boolean} True se limite atingido
+     */
     isLimitReached(pageText) {
         const limitMessages = [
             'already captured 4 times today',
@@ -557,6 +753,11 @@ class SmartArchiveChecker {
         return limitMessages.some(message => text.includes(message));
     }
 
+    /**
+     * ✅ Valida URL de snapshot
+     * @param {string} url - URL a validar
+     * @returns {boolean} True se URL de snapshot válida
+     */
     isValidSnapshotUrl(url) {
         return url &&
             url.includes('web.archive.org/web/') &&
@@ -564,6 +765,11 @@ class SmartArchiveChecker {
             !url.includes('/save/');
     }
 
+    /**
+     * 📈 Atualiza log de progresso
+     * @param {string} originalUrl - URL original
+     * @param {string} archivedUrl - URL arquivada
+     */
     updateProgressLog(originalUrl, archivedUrl) {
         this.progressLog.archives[originalUrl] = {
             timestamp: new Date().toISOString(),
@@ -573,10 +779,18 @@ class SmartArchiveChecker {
         this.progressLog.metadata.timestamp = new Date().toISOString();
     }
 
+    /**
+     * 💾 Salva relatório incremental
+     */
     saveIncrementalReport() {
         this.saveResults();
     }
 
+    /**
+     * 📊 Atualiza resultados do processamento
+     * @param {string} url - URL processada
+     * @param {Object} result - Resultado do processamento
+     */
     updateResults(url, result) {
         const resultEntry = {
             id: this.currentId.toString(),
@@ -607,6 +821,11 @@ class SmartArchiveChecker {
         this.saveResults();
     }
 
+    /**
+     * 🏷️ Extrai título da URL
+     * @param {string} url - URL para extrair título
+     * @returns {string} Título extraído
+     */
     extractTitleFromUrl(url) {
         try {
             const parsed = new URL(url);
@@ -616,13 +835,21 @@ class SmartArchiveChecker {
         }
     }
 
+    /**
+     * 💾 Salva resultados em arquivo
+     */
     saveResults() {
         const resultsPath = path.join(this.dataDir, 'archive_results.json');
         fs.writeFileSync(resultsPath, JSON.stringify(this.results, null, 2));
     }
 
+    /**
+     * 🔄 Processa lista de URLs
+     * @param {string[]} links - Array de URLs
+     * @returns {Promise<Object>} Resultados do processamento
+     */
     async processUrls(links) {
-        // Criar pastas apenas quando for processar
+        // 📁 Criar pastas apenas quando for processar
         this.ensureDataDirectory();
         this.cleanupRedundantFiles();
 
@@ -702,6 +929,9 @@ class SmartArchiveChecker {
         return this.results;
     }
 
+    /**
+     * 📋 Gera relatório final
+     */
     generateFinalReport() {
         this.printHeader('RELATÓRIO FINAL');
 
@@ -720,6 +950,9 @@ class SmartArchiveChecker {
         this.openDocsFolder();
     }
 
+    /**
+     * 📂 Abre pasta de documentos
+     */
     openDocsFolder() {
         try {
             const { execSync } = require('child_process');
@@ -736,6 +969,9 @@ class SmartArchiveChecker {
         }
     }
 
+    /**
+     * 📄 Cria relatório em texto
+     */
     createTextReport() {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const reportPath = path.join(this.docsDir, `relatorio_${timestamp}.txt`);
@@ -788,6 +1024,9 @@ class SmartArchiveChecker {
         this.printSuccess(`Relatório em texto salvo: relatorio_${timestamp}.txt`);
     }
 
+    /**
+     * 🎯 Mostra resumo executivo
+     */
     showSummary() {
         const successfulUrls = Array.from(this.urlAttempts.entries())
             .filter(([_, attempts]) => attempts.success)
@@ -808,11 +1047,11 @@ class SmartArchiveChecker {
     }
 
     /**
-     * Método para obter estatísticas do processamento
+     * 📊 Obtém estatísticas do processamento
      * @returns {Object} Estatísticas do arquivamento
      */
     getStatistics() {
-        // Se não há resultados, retornar estatísticas vazias
+        // 📭 Se não há resultados, retornar estatísticas vazias
         if (!this.results || !this.results.metadata || this.results.metadata.summary.total === 0) {
             return {
                 summary: { total: 0, archived: 0, failed: 0, pending: 0 },
@@ -833,7 +1072,7 @@ class SmartArchiveChecker {
     }
 
     /**
-     * Método para obter URLs arquivadas com sucesso
+     * 📋 Obtém URLs arquivadas com sucesso
      * @returns {Array} Array de objetos com URLs originais e arquivadas
      */
     getArchivedUrls() {
@@ -845,7 +1084,7 @@ class SmartArchiveChecker {
     }
 
     /**
-     * Método para obter URLs que falharam
+     * ❌ Obtém URLs que falharam
      * @returns {Array} Array de objetos com URLs e erros
      */
     getFailedUrls() {
@@ -856,32 +1095,64 @@ class SmartArchiveChecker {
         }));
     }
 
+    /**
+     * ✂️ Trunca URL para exibição
+     * @param {string} url - URL original
+     * @param {number} length - Comprimento máximo
+     * @returns {string} URL truncada
+     */
     truncateUrl(url, length = 50) {
         return url.length > length ? url.substring(0, length) + '...' : url;
     }
 
+    /**
+     * 💬 Imprime mensagem formatada
+     * @param {string} icon - Ícone Unicode
+     * @param {string} message - Mensagem
+     */
     printMessage(icon, message) {
         console.log(`${icon}  ${message}`);
     }
 
+    /**
+     * ✅ Imprime mensagem de sucesso
+     * @param {string} message - Mensagem
+     */
     printSuccess(message) {
         console.log(`✅  ${message}`);
     }
 
+    /**
+     * ❌ Imprime mensagem de erro
+     * @param {string} message - Mensagem
+     */
     printError(message) {
         console.log(`❌  ${message}`);
     }
 
+    /**
+     * ⚠️ Imprime mensagem de aviso
+     * @param {string} message - Mensagem
+     */
     printWarning(message) {
         console.log(`⚠️  ${message}`);
     }
 
+    /**
+     * 🎪 Imprime cabeçalho
+     * @param {string} title - Título do cabeçalho
+     */
     printHeader(title) {
         console.log('\n' + '='.repeat(60));
         console.log(`🎯 ${title}`);
         console.log('='.repeat(60));
     }
 
+    /**
+     * 📑 Imprime seção
+     * @param {string} service - Nome do serviço
+     * @param {string} url - URL sendo processada
+     */
     printSection(service, url) {
         console.log('\n' + '-'.repeat(50));
         console.log(`🔵 ${service}:`);
@@ -889,11 +1160,25 @@ class SmartArchiveChecker {
         console.log('-'.repeat(50));
     }
 
+    /**
+     * 📊 Imprime progresso atual
+     * @param {number} current - Item atual
+     * @param {number} total - Total de itens
+     * @param {string} url - URL sendo processada
+     * @param {number} attempts - Tentativas realizadas
+     */
     printProgress(current, total, url, attempts) {
         console.log(`\n📊 [${current}/${total}] ${url}`);
         console.log(`🔄 Tentativas: ${attempts}/${this.config.wayback.maxAttemptsPerUrl}`);
     }
 
+    /**
+     * 📈 Mostra progresso atual com estatísticas
+     * @param {number} current - Item atual
+     * @param {number} total - Total de itens
+     * @param {number} successCount - Sucessos até agora
+     * @param {number} startTime - Timestamp de início
+     */
     showCurrentProgress(current, total, successCount, startTime) {
         const progress = ((current) / total * 100).toFixed(1);
         const elapsed = Math.floor((Date.now() - startTime) / 1000);

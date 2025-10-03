@@ -1,29 +1,42 @@
 #!/usr/bin/env node
 
+/**
+ * 🚀 Ponto de entrada principal da CLI Rav Archive
+ * @module CLI
+ */
+
 const { showBanner, showHelp } = require('./utils/logger');
 
+/**
+ * 🎯 Função principal da CLI
+ */
 function main() {
     const args = process.argv.slice(2);
     
-    // Mostrar ajuda se não há argumentos ou se pede ajuda
+    // ❓ Mostrar ajuda se não há argumentos ou se pede ajuda
     if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
         showBanner();
         showHelp();
         process.exit(0);
     }
 
-    // Mostrar versão
+    // 📦 Mostrar versão
     if (args[0] === '--version' || args[0] === '-v') {
         console.log('rav-archive v1.0.0');
         process.exit(0);
     }
 
-    // Para outros comandos, carregar assincronamente
+    // 🔄 Para outros comandos, carregar assincronamente
     loadCommands(args);
 }
 
+/**
+ * 🔧 Carrega e executa comandos específicos
+ * @async
+ * @param {string[]} args - Argumentos da linha de comando
+ */
 async function loadCommands(args) {
-    // Só carrega o RavArchive se for um comando que precisa dele
+    // 📥 Carregar comandos apenas quando necessário
     const { RavArchive } = require('./index');
     const fileCommand = require('./commands/file');
     const urlCommand = require('./commands/url');
@@ -67,7 +80,7 @@ async function loadCommands(args) {
     }
 }
 
-// Executar apenas se for o módulo principal
+// 🎪 Executar apenas se for o módulo principal
 if (require.main === module) {
     main();
 }

@@ -3,16 +3,26 @@ const AutoInstaller = require('./core/AutoInstaller');
 const ConnectionManager = require('./core/ConnectionManager');
 const config = require('./config/default');
 
+/**
+ * 🎯 Classe principal do Rav Archive - Interface pública
+ * @class RavArchive
+ */
 class RavArchive {
+    /**
+     * 🏗️ Construtor do Rav Archive
+     * @param {Object} userConfig - Configurações personalizadas do usuário
+     */
     constructor(userConfig = {}) {
         this.config = { ...config, ...userConfig };
         this.checker = new SmartArchiveChecker(this.config);
     }
 
     /**
-     * Arquivar uma única URL
+     * 🔗 Arquivar uma única URL
+     * @async
      * @param {string} url - URL para arquivar
      * @returns {Promise<Object>} Resultado do arquivamento
+     * @throws {Error} Se falhar no arquivamento
      */
     async archiveUrl(url) {
         try {
@@ -25,9 +35,11 @@ class RavArchive {
     }
 
     /**
-     * Arquivar múltiplas URLs
+     * 📦 Arquivar múltiplas URLs
+     * @async
      * @param {string[]} urls - Array de URLs para arquivar
      * @returns {Promise<Object>} Resultados do arquivamento
+     * @throws {Error} Se falhar no arquivamento
      */
     async archiveUrls(urls) {
         try {
@@ -40,9 +52,11 @@ class RavArchive {
     }
 
     /**
-     * Arquivar URLs de um arquivo
+     * 📄 Arquivar URLs de um arquivo
+     * @async
      * @param {string} filePath - Caminho do arquivo com URLs
      * @returns {Promise<Object>} Resultados do arquivamento
+     * @throws {Error} Se arquivo não existir ou for inválido
      */
     async archiveFromFile(filePath) {
         try {
@@ -61,9 +75,11 @@ class RavArchive {
     }
 
     /**
-     * Verificar se uma URL já está arquivada
+     * 🔍 Verificar se uma URL já está arquivada
+     * @async
      * @param {string} url - URL para verificar
      * @returns {Promise<Object>} Informações do arquivamento
+     * @throws {Error} Se falhar na verificação
      */
     async checkArchived(url) {
         try {
@@ -80,33 +96,33 @@ class RavArchive {
     }
 
     /**
-     * Obter estatísticas dos últimos arquivamentos
-     * @returns {Object} Estatísticas
+     * 📊 Obter estatísticas dos últimos arquivamentos
+     * @returns {Object} Estatísticas consolidadas
      */
     getStats() {
         return this.checker.getStatistics();
     }
 
     /**
-     * Obter URLs arquivadas com sucesso
-     * @returns {Array} URLs arquivadas
+     * ✅ Obter URLs arquivadas com sucesso
+     * @returns {Array} URLs arquivadas com metadados
      */
     getArchivedUrls() {
         return this.checker.getArchivedUrls();
     }
 
     /**
-     * Obter URLs que falharam
-     * @returns {Array} URLs com falhas
+     * ❌ Obter URLs que falharam no arquivamento
+     * @returns {Array} URLs com falhas e detalhes de erro
      */
     getFailedUrls() {
         return this.checker.getFailedUrls();
     }
 
     /**
-     * Validar URL
+     * ✅ Validar formato de URL
      * @param {string} url - URL para validar
-     * @returns {boolean} É válida
+     * @returns {boolean} True se URL for válida
      */
     isValidUrl(url) {
         try {
