@@ -52,8 +52,7 @@ class ConnectionManager {
 
         const isConnected = await this.checkConnection();
         if (!isConnected) {
-            console.log('❌ Sem conexão de internet. Verifique sua rede.');
-            process.exit(1);
+            throw new Error('❌ Sem conexão de internet. Verifique sua rede.');
         }
 
         console.log('⚡ Conexão estabelecida');

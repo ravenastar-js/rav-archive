@@ -1,18 +1,28 @@
 {
   "name": "rav-archive",
   "version": "1.0.0",
-  "description": "📦✨ Arquivando links automaticamente com Playwright e Wayback Machine 🌐🕰️",
-  "main": "archive.js",
+  "description": "📦✨ Biblioteca para arquivamento automático de URLs no Wayback Machine usando Playwright",
+  "main": "src/index.js",
+  "bin": {
+    "rav-archive": "./src/bin/rav-archive.js"
+  },
   "scripts": {
-    "start": "node archive.js",
-    "nv": "npm install && npx playwright install chromium"
+    "start": "node src/cli.js",
+    "cli": "node src/cli.js",
+    "dev": "node src/cli.js --debug",
+    "test": "node test.js",
+    "install-deps": "npx playwright install chromium",
+    "prepublishOnly": "npm run install-deps"
   },
   "keywords": [
     "archive",
     "wayback-machine",
     "playwright",
     "automation",
-    "web-preservation"
+    "web-preservation",
+    "internet-archive",
+    "url-saver",
+    "ravenastar"
   ],
   "author": "ravenastar-js",
   "license": "MIT",
@@ -21,5 +31,21 @@
   },
   "engines": {
     "node": ">=16.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seu-usuario/rav-archive"
+  },
+  "homepage": "https://github.com/seu-usuario/rav-archive#readme",
+  "bugs": {
+    "url": "https://github.com/seu-usuario/rav-archive/issues"
+  },
+  "files": [
+    "src/",
+    "iniciar.bat",
+    "links.txt",
+    "rav-archive.gif",
+    "README.md",
+    "LICENSE"
+  ]
 }

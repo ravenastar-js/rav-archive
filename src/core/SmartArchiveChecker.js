@@ -4,20 +4,8 @@ const { URL } = require('url');
 const ConnectionManager = require('./ConnectionManager');
 
 class SmartArchiveChecker {
-    constructor() {
-        this.dataDir = 'DADOS';
-        this.docsDir = 'DOCS';
-        this.connectionManager = new ConnectionManager();
-        this.results = {
-            metadata: {
-                timestamp: new Date().toISOString(),
-                summary: { total: 0, archived: 0, failed: 0, pending: 0 },
-                status: "in_progress"
-            },
-            results: { archived: [], failed: [] }
-        };
-
-        this.config = {
+    constructor(config = {}) {
+        const defaultConfig = {
             browser: {
                 headless: true,
                 viewport: { width: 1280, height: 720 },
@@ -37,7 +25,26 @@ class SmartArchiveChecker {
                 timeout: 60000,
                 maxRetries: 2,
                 maxAttemptsPerUrl: 4
+            },
+            directories: {
+                data: 'DADOS',
+                docs: 'DOCS'
             }
+        };
+
+        this.config = this.deepMerge(defaultConfig, config);
+        
+        this.dataDir = this.config.directories.data;
+        this.docsDir = this.config.directories.docs;
+        this.connectionManager = new ConnectionManager();
+        
+        this.results = {
+            metadata: {
+                timestamp: new Date().toISOString(),
+                summary: { total: 0, archived: 0, failed: 0, pending: 0 },
+                status: "no_data"
+            },
+            results: { archived: [], failed: [] }
         };
 
         this.browser = null;
@@ -53,15 +60,28 @@ class SmartArchiveChecker {
             },
             archives: {}
         };
+    }
 
-        this.ensureDataDirectory();
-        this.cleanupRedundantFiles();
+    deepMerge(target, source) {
+        const result = { ...target };
+        for (const key in source) {
+            if (source[key] instanceof Object && key in target) {
+                result[key] = this.deepMerge(target[key], source[key]);
+            } else {
+                result[key] = source[key];
+            }
+        }
+        return result;
     }
 
     ensureDataDirectory() {
         if (!fs.existsSync(this.dataDir)) {
             fs.mkdirSync(this.dataDir, { recursive: true });
             this.printMessage('📁', `Pasta ${this.dataDir} criada`);
+        }
+        if (!fs.existsSync(this.docsDir)) {
+            fs.mkdirSync(this.docsDir, { recursive: true });
+            this.printMessage('📁', `Pasta ${this.docsDir} criada`);
         }
     }
 
@@ -597,6 +617,10 @@ class SmartArchiveChecker {
     }
 
     async processUrls(links) {
+        // Criar pastas apenas quando for processar
+        this.ensureDataDirectory();
+        this.cleanupRedundantFiles();
+
         this.printHeader('INICIANDO ARQUIVAMENTO');
 
         await this.initializeConnection();
@@ -669,6 +693,8 @@ class SmartArchiveChecker {
             this.saveResults();
             this.cleanupRedundantFiles();
         }
+
+        return this.results;
     }
 
     generateFinalReport() {
@@ -713,7 +739,7 @@ class SmartArchiveChecker {
             fs.mkdirSync(this.docsDir, { recursive: true });
         }
 
-        let reportContent = 'RELATÓRIO DE ARQUIVAMENTO - RAV ARCHIVE V1\n';
+        let reportContent = 'RELATÓRIO DE ARQUIVAMENTO - RAV ARCHIVE SAVE\n';
         reportContent += '='.repeat(60) + '\n';
         reportContent += `Data de geração: ${new Date().toLocaleString('pt-BR')}\n`;
         reportContent += `Total de URLs processadas: ${this.results.metadata.summary.total}\n`;
@@ -774,6 +800,55 @@ class SmartArchiveChecker {
                 if (waybackUrl) console.log(`     🔵 ${waybackUrl}`);
             });
         }
+    }
+
+    /**
+     * Método para obter estatísticas do processamento
+     * @returns {Object} Estatísticas do arquivamento
+     */
+    getStatistics() {
+        // Se não há resultados, retornar estatísticas vazias
+        if (!this.results || !this.results.metadata || this.results.metadata.summary.total === 0) {
+            return {
+                summary: { total: 0, archived: 0, failed: 0, pending: 0 },
+                status: "no_data",
+                timestamp: new Date().toISOString(),
+                successfulUrls: []
+            };
+        }
+
+        return {
+            summary: this.results.metadata.summary,
+            status: this.results.metadata.status,
+            timestamp: this.results.metadata.timestamp,
+            successfulUrls: Array.from(this.urlAttempts.entries())
+                .filter(([_, attempts]) => attempts.success)
+                .map(([url, _]) => url)
+        };
+    }
+
+    /**
+     * Método para obter URLs arquivadas com sucesso
+     * @returns {Array} Array de objetos com URLs originais e arquivadas
+     */
+    getArchivedUrls() {
+        return this.results.results.archived.map(entry => ({
+            originalUrl: entry.originalUrl,
+            archiveUrl: entry.archiveUrl,
+            timestamp: entry.timestamp
+        }));
+    }
+
+    /**
+     * Método para obter URLs que falharam
+     * @returns {Array} Array de objetos com URLs e erros
+     */
+    getFailedUrls() {
+        return this.results.results.failed.map(entry => ({
+            originalUrl: entry.originalUrl,
+            error: entry.error,
+            timestamp: entry.timestamp
+        }));
     }
 
     truncateUrl(url, length = 50) {

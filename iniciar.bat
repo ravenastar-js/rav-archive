@@ -15,18 +15,17 @@ if errorlevel 1 (
 )
 echo Node.js detectado
 
-:: Instala Playwright
-call npm install playwright
+:: Instala dependências
+echo Instalando dependencias...
+call npm install
 if errorlevel 1 (
-    call npm install playwright --force
-)
-if errorlevel 1 (
-    echo Falha na instalacao do Playwright
+    echo Falha na instalacao das dependencias
     pause
     exit /b 1
 )
 
-:: Instala Chromium
+:: Instala Playwright Chromium
+echo Instalando Playwright Chromium...
 call npx playwright install chromium
 if errorlevel 1 (
     echo Falha na instalacao do Chromium
@@ -34,21 +33,22 @@ if errorlevel 1 (
     exit /b 1
 )
 
-:: Verifica arquivo archive.js
-if not exist "%SCRIPT_DIR%archive.js" (
-    echo Arquivo archive.js nao encontrado!
-    pause
-    exit /b 1
-)
-
-:: Cria pastas DADOS e DOCS
-if not exist "%SCRIPT_DIR%DADOS" (
-    mkdir "%SCRIPT_DIR%DADOS"
-)
-if not exist "%SCRIPT_DIR%DOCS" (
-    mkdir "%SCRIPT_DIR%DOCS"
+:: Verifica se existe arquivo de links
+if not exist "links.txt" (
+    echo.
+    echo AVISO: Arquivo links.txt nao encontrado!
+    echo Criando arquivo exemplo...
+    echo https://google.com > links.txt
+    echo https://github.com >> links.txt
+    echo https://example.com >> links.txt
+    echo.
+    echo Arquivo links.txt criado com URLs de exemplo!
+    echo.
 )
 
 :: Executa o script
-node "%SCRIPT_DIR%archive.js"
+echo.
+echo 🚀 RAV ARCHIVE - Iniciando...
+echo.
+node src/cli.js file links.txt
 pause

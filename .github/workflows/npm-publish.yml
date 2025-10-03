@@ -1,0 +1,154 @@
+# 🚀 RAV Archive - Publish to npm
+
+name: Publish RAV Archive to npm
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🛠️ Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ⎔ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: 📦 Install dependencies
+        run: npm install
+
+      - name: 🔧 Configure Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: 🏷️ Get current version
+        id: current_version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "📋 Versão atual: $CURRENT_VERSION"
+
+      - name: 🔢 Calculate next version
+        id: next_version
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          echo "📦 Nome do pacote: $PACKAGE_NAME"
+          
+          # Tenta obter a última versão do npm
+          if npm view $PACKAGE_NAME version > /dev/null 2>&1; then
+            LATEST_NPM=$(npm view $PACKAGE_NAME version)
+            echo "📦 Última versão no npm: $LATEST_NPM"
+            
+            # Incrementa pre-release number
+            if [[ "$LATEST_NPM" =~ ^(.*)-([0-9]+)$ ]]; then
+              BASE=${BASH_REMATCH[1]}
+              NUM=${BASH_REMATCH[2]}
+              NEW_NUM=$((NUM + 1))
+              NEW_VERSION="$BASE-$NEW_NUM"
+            else
+              NEW_VERSION="${LATEST_NPM}-1"
+            fi
+          else
+            # Primeira publicação
+            NEW_VERSION="${{ steps.current_version.outputs.current_version }}-1"
+          fi
+          
+          echo "🎯 Nova versão: $NEW_VERSION"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: 🚀 Update version in package.json
+        run: |
+          echo "🔄 Atualizando package.json para: ${{ steps.next_version.outputs.new_version }}"
+          npm version "${{ steps.next_version.outputs.new_version }}" --no-git-tag-version --allow-same-version
+          echo "✅ Versão atualizada"
+
+      - name: 🔧 Fix package.json issues
+        run: npm pkg fix
+
+      - name: 🔧 Install Playwright dependencies
+        run: npx playwright install chromium
+
+      - name: 📤 Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: 💾 Commit and push changes
+        run: |
+          # Verifica se há mudanças para commitar
+          if git diff --quiet package.json; then
+            echo "⚠️ Nenhuma mudança no package.json para commitar"
+          else
+            echo "💾 Comitando mudanças..."
+            git add package.json
+            git commit -m "🤖 RAV Archive: version ${{ steps.next_version.outputs.new_version }} [skip ci]"
+            git push origin main
+            echo "✅ Mudanças commitadas e enviadas"
+          fi
+
+      - name: 🎉 Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.next_version.outputs.new_version }}
+          name: "🌐 RAV Archive v${{ steps.next_version.outputs.new_version }}"
+          body: |
+            ## 🚀 RAV Archive Publicado!
+
+            **📦✨ Biblioteca para arquivamento automático de URLs no Wayback Machine usando Playwright**
+
+            ---
+
+            ## 🔗 Links
+
+            - **📖 [Documentação](https://github.com/ravenastar-js/rav-archive#readme)**
+            - **📦 [Pacote NPM](https://www.npmjs.com/package/rav-archive)**
+            - **💻 [Código Fonte](https://github.com/ravenastar-js/rav-archive)**
+            
+            ---
+
+            ## 🎯 Características
+
+            - ✅ Arquivamento automático no Wayback Machine
+            - ✅ Verificação de URLs já arquivadas
+            - ✅ Processamento em lote
+            - ✅ Configuração flexível
+            - ✅ CLI e NPM
+            - ✅ Relatórios detalhados
+            - ✅ Instalação automática de dependências
+
+            ---
+
+            ## 🛠️ Uso Rápido
+
+            ```bash
+            # Como CLI
+            npx rav-archive file links.txt
+            npx rav-archive url https://exemplo.com
+
+            # Como biblioteca
+            const { RavArchive } = require('rav-archive');
+            const archive = new RavArchive();
+            await archive.archiveUrl('https://exemplo.com');
+            ```
+
+            ---
+
+            **📅 Versão:** ${{ steps.next_version.outputs.new_version }}  
+            **🔖 Tag:** v${{ steps.next_version.outputs.new_version }}  
+            **⚡ Publicado automaticamente via GitHub Actions**
+
+            > ⚠️ **Aviso:** Respeite os termos de serviço do Wayback Machine e use com responsabilidade.
+          draft: false
+          prerelease: true

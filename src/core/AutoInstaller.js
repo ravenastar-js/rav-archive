@@ -3,17 +3,15 @@ const { execSync } = require('child_process');
 
 class AutoInstaller {
     static async setupEnvironment() {
-        console.log('🔧 Iniciando configuração automática...\n');
+        console.log('🔧 Configurando ambiente Rav Archive...\n');
 
         if (!this.checkNodeJS()) {
-            console.error('❌ Node.js não encontrado!');
-            console.log('📥 Baixe em: https://nodejs.org');
-            process.exit(1);
+            throw new Error('Node.js não encontrado! Baixe em: https://nodejs.org');
         }
 
         await this.installDependencies();
         await this.installPlaywright();
-        console.log('✅ Configuração automática concluída!\n');
+        console.log('✅ Ambiente configurado com sucesso!\n');
     }
 
     static checkNodeJS() {
@@ -27,24 +25,27 @@ class AutoInstaller {
     }
 
     static async installDependencies() {
-        if (!fs.existsSync('node_modules')) {
-            console.log('📦 Instalando dependências...');
+        try {
+            // Verifica se playwright está instalado
+            require.resolve('playwright');
+            console.log('✅ Playwright já instalado');
+        } catch {
+            console.log('📦 Instalando Playwright...');
             try {
-                execSync('npm install', { stdio: 'inherit' });
+                execSync('npm install playwright', { stdio: 'inherit' });
             } catch (error) {
-                console.error('❌ Erro na instalação:', error.message);
-                process.exit(1);
+                throw new Error(`Falha na instalação do Playwright: ${error.message}`);
             }
         }
     }
 
     static async installPlaywright() {
         try {
-            console.log('🖥️ Configurando Playwright...');
+            console.log('🖥️ Verificando Chromium...');
             execSync('npx playwright install chromium', { stdio: 'inherit' });
+            console.log('✅ Chromium configurado');
         } catch (error) {
-            console.error('❌ Erro no Playwright:', error.message);
-            process.exit(1);
+            throw new Error(`Falha na instalação do Chromium: ${error.message}`);
         }
     }
 }

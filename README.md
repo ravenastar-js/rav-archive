@@ -1,19 +1,16 @@
 <div align="center">
 
 # 🤖 Rav Archive
-### ✨ Arquivando links automaticamente com 🌐 Playwright e 🕰️ Wayback Machine 
+### ✨ Arquivamento automático com 🌐 Playwright e 🕰️ Wayback Machine 
 
 [![⭐ Stars](https://img.shields.io/github/stars/ravenastar-js/rav-archive?style=for-the-badge&label=%E2%AD%90%20Stars&color=2d7445&logo=star&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/stargazers)
 [![🔱 Forks](https://img.shields.io/github/forks/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%94%B1%20Forks&color=2d7445&logo=git&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/network/members)
-[![👁️ Watchers](https://img.shields.io/github/watchers/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%91%81%EF%B8%8F%20Watchers&color=2d7445&logo=eye&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/watchers)
-[![🕒 Last Commit](https://img.shields.io/github/last-commit/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%95%92%20Last%20Commit&color=2d7445&logo=clock&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/commits/all)
-[![🐞 Issues](https://img.shields.io/github/issues/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%90%9E%20Issues&color=2d7445&logo=bug&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive/issues)
-[![📦 Repo Size](https://img.shields.io/github/repo-size/ravenastar-js/rav-archive?style=for-the-badge&label=%F0%9F%93%A6%20Repo%20Size&color=2d7445&logo=database&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive)
-[![⚙️ Node.js](https://img.shields.io/badge/%E2%9A%99%EF%B8%8F%20Node.js-16.0%2B-green?style=for-the-badge&logo=nodedotjs&color=2d7445&logoColor=white&labelColor=444&radius=10)](https://nodejs.org/pt/download)
-[![🎭 Playwright](https://img.shields.io/badge/%F0%9F%8E%AD%20Playwright-Latest-blue?style=for-the-badge&logo=playwright&color=2d7445&logoColor=white&labelColor=444&radius=10)](https://playwright.dev/)
-[![🖥️ Platform](https://img.shields.io/badge/%F0%9F%96%A5%EF%B8%8F%20Platform-Windows-blue?style=for-the-badge&logo=windows&color=2d7445&logoColor=white&labelColor=444&radius=10)](https://github.com/ravenastar-js/rav-archive)
+[![📦 NPM Version](https://img.shields.io/npm/v/rav-archive?style=for-the-badge&label=%F0%9F%93%A6%20NPM&color=2d7445&logo=npm&logoColor=white&labelColor=444&radius=10)](https://www.npmjs.com/package/rav-archive)
+[![⚙️ Node.js](https://img.shields.io/badge/%E2%9A%99%EF%B8%8F%20Node.js-16.0%2B-green?style=for-the-badge&logo=nodedotjs&color=2d7445&logoColor=white&labelColor=444&radius=10)](https://nodejs.org)
+[![🎭 Playwright](https://img.shields.io/badge/%F0%9F%8E%AD%20Playwright-1.55%2B-blue?style=for-the-badge&logo=playwright&color=2d7445&logoColor=white&labelColor=444&radius=10)](https://playwright.dev/)
+[![📄 License](https://img.shields.io/badge/%F0%9F%93%84%20License-MIT-blue?style=for-the-badge&logo=opensourceinitiative&color=2d7445&logoColor=white&labelColor=444&radius=10)](LICENSE)
 
-*Automatize o arquivamento de URLs com produtividade*
+*Biblioteca NPM + CLI para preservação digital automática*
 
 </div>
 
@@ -29,14 +26,72 @@ BANNER INSPIRADO EM
 
 ---
 
-## 📋 Índice
+## 🎯 Visão Geral
+
+O **RAV Archive** é uma ferramenta completa para arquivamento automático de URLs no **Internet Archive's Wayback Machine**. Funciona como **biblioteca NPM** para desenvolvedores e **CLI** para usuários finais.
+
+### ✨ **Por que usar?**
+- 🚀 **Zero configuração** - Instalação e setup automáticos
+- 📦 **Dual-mode** - Use como lib ou CLI
+- 🧠 **Inteligente** - Evita duplicatas e detecta limites
+- 📊 **Transparente** - Relatórios detalhados em tempo real
+- ⚡ **Eficiente** - Processamento em lote otimizado
+
+---
+
+## 🚀 Começando em 30 Segundos
+
+### 📥 **Instalação Rápida**
+```bash
+# Como biblioteca no seu projeto
+npm install rav-archive
+
+# Como CLI global
+npm install -g rav-archive
+
+# Ou baixe direto (sem Node.js)
+curl -L -o rav-archive.zip https://github.com/ravenastar-js/rav-archive/archive/refs/heads/save.zip
+tar -xf rav-archive.zip && cd rav-archive
+```
+
+### 🛠️ **Uso Imediato**
+```javascript
+// Como biblioteca
+const { RavArchive } = require('rav-archive');
+const archive = new RavArchive();
+
+// Arquivar URLs
+await archive.archiveUrl('https://exemplo.com');
+await archive.archiveFromFile('links.txt');
+
+// Verificar status
+const result = await archive.checkArchived('https://site.com');
+const stats = archive.getStats();
+```
+
+```bash
+# Como CLI
+rav-archive file links.txt
+rav-archive url https://exemplo.com
+rav-archive stats
+rav-archive --help
+```
+
+```batch
+# Windows (batch)
+iniciar.bat
+```
+
+---
+
+## 📋 Índice Rápido
 
 <details>
-<summary><strong>🚀 Início Rápido</strong></summary>
+<summary><strong>🚀 Comece Aqui</strong></summary>
 
-- [Como Usar](#-como-usar)
-- [Instalação](#-instalação)
-- [Primeiro Uso](#-primeiro-uso)
+- [Instalação Rápida](#-começando-em-30-segundos)
+- [Primeiros Passos](#-primeiros-passos)
+- [Exemplos Práticos](#-exemplos-práticos)
 
 </details>
 
@@ -44,223 +99,351 @@ BANNER INSPIRADO EM
 <summary><strong>⚡ Funcionalidades</strong></summary>
 
 - [Recursos Principais](#-recursos-principais)
+- [Modos de Uso](#-modos-de-uso)
+- [Resultados](#-resultados-e-relatórios)
 
 </details>
 
 <details>
-<summary><strong>📁 Estrutura e Configuração</strong></summary>
+<summary><strong>🛠️ Uso Avançado</strong></summary>
 
-- [Estrutura de Arquivos](#-estrutura-de-arquivos)
-- [Configuração do links.txt](#-configuração-do-linkstxt)
-
-</details>
-
-<details>
-<summary><strong>🛠️ Comandos e Uso Avançado</strong></summary>
-
-- [Comandos Disponíveis](#️-comandos-disponíveis)
-- [Troubleshooting](#-troubleshooting)
+- [Como Biblioteca](#-como-biblioteca)
+- [Como CLI](#-como-cli)
+- [Configuração](#-configuração)
 
 </details>
 
 <details>
-<summary><strong>⚙️ Requisitos e Limitações</strong></summary>
+<summary><strong>📁 Estrutura</strong></summary>
 
-- [Requisitos do Sistema](#️-requisitos-do-sistema)
+- [Arquitetura](#-arquitetura)
+- [Arquivos](#-estrutura-de-arquivos)
 
 </details>
 
 ---
 
-## ✨ FAQ
+## 🏁 Primeiros Passos
 
-<details>
-<summary>📥 Como instalar o NodeJS?</summary>
+### 1. **Prepare suas URLs**
+Crie um arquivo `links.txt`:
+```text
+https://github.com
+https://example.com
+https://seu-site.com/blog
+```
 
-- [COMO INSTALAR NODE JS NO WINDOWS?](https://youtu.be/-jft_9PlffQ)
-</details>
+### 2. **Execute**
+```bash
+# Se instalou via NPM
+rav-archive file links.txt
 
-<details>
-<summary>📥 Como baixar e executar o Rav Archive?</summary>
+# Se baixou o projeto
+node src/cli.js file links.txt
 
-<img src="RavArchive.gif" alt="Baixando e executando o Rav Archive"/>
-</details>
+# Windows
+iniciar.bat
+```
 
----
-
-## 🚀 Como Usar
-
-### 📥 Instalação
-
-1. **Baixe o projeto como ZIP**
-   - Link direto:
-     ```
-     https://github.com/ravenastar-js/rav-archive/archive/refs/heads/save.zip
-     ```
-
-   - Ou via CMD (sem Git), usando `curl`:
-     ```
-     curl -L -o rav-archive.zip https://github.com/ravenastar-js/rav-archive/archive/refs/heads/save.zip
-     ```
-
-2. **Extraia o conteúdo**
-   - Manualmente: clique com o botão direito no `.zip` e selecione **“Extrair tudo”**
-   - Ou via terminal:
-     ```
-     tar -xf rav-archive.zip
-     ```
-
-### ⚙️ Preparação
-3. **Configure suas URLs**
-   - Abra o arquivo `links.txt` na pasta raiz
-   - Adicione as URLs (um por linha)
-   ```
-   https://exemplo1.com
-   https://exemplo2.com/blog
-   https://exemplo3.com/artigo
-   ```
-
-### 🚀 Execução
-4. **Execute o arquivador**
-   ```
-   iniciar.bat
-   ```
-
-### 📊 Resultados
-5. **Aguarde o processamento**
-   - O script é 100% automático
-   - Progresso visível no terminal
-   - Resultados salvos na pasta `DADOS/` e `DOCS/`
-
-> **💡 Dica:** Todas as dependências são instaladas automaticamente na primeira execução.
+### 3. **Acompanhe o Progresso**
+- ✅ Configuração automática
+- 🔍 Verificação de URLs existentes
+- 📤 Arquivamento de novas URLs
+- 📊 Relatório final gerado
 
 ---
 
 ## ⚡ Recursos Principais
 
-### 🔧 **Configuração Automática**
-- ✅ Instalação automática de dependências
-- ✅ Configuração do Playwright
-- ✅ Detecção inteligente do ambiente
+### 🔧 **Configuração Inteligente**
+- Instalação automática do Playwright
+- Detecção de ambiente Node.js
+- Setup completo sem intervenção
 
-### 🧠 **Inteligência Integrada**
-- 🔍 Verificação de URLs já arquivadas
-- 📤 Arquivamento apenas de URLs novas
-- 🚫 Detecção automática de limites
-- ⚡ Processamento otimizado em lote
+### 🧠 **Lógica Avançada**
+- Verificação prévia no Wayback Machine
+- Detecção de limites e rate limiting
+- Retry automático em falhas
+- Delays inteligentes entre requisições
 
-### 📊 **Relatórios Completos**
-- 📈 Progresso em tempo real
-- 📋 Resultados estruturados em JSON
-- 🎯 Relatórios com timestamp
-- 📄 Relatório final é gerado em `.txt` na pasta `DOCS/`
+### 📊 **Monitoramento Completo**
+- Progresso em tempo real
+- Estatísticas detalhadas
+- Logs estruturados em JSON
+- Relatórios em texto formatado
+
+### 🛡️ **Robusto e Confiável**
+- Tratamento de erros granular
+- Timeouts configuráveis
+- Conexão resiliente
+- VPN-friendly
+
+---
+
+## 🛠️ Modos de Uso
+
+### 📦 **Como Biblioteca**
+Ideal para integrar em aplicações existentes:
+
+```javascript
+const { RavArchive } = require('rav-archive');
+
+// Configuração customizada
+const archive = new RavArchive({
+    browser: { headless: true },
+    wayback: { maxAttemptsPerUrl: 5 }
+});
+
+// Fluxo completo
+async function arquivarSites() {
+    const resultados = await archive.archiveUrls([
+        'https://site1.com',
+        'https://site2.com'
+    ]);
+    
+    console.log(`✅ ${resultados.metadata.summary.archived} URLs salvas`);
+    console.log(`📊 Taxa de sucesso: ${((resultados.metadata.summary.archived / resultados.metadata.summary.total) * 100).toFixed(1)}%`);
+    
+    // URLs com sucesso
+    const urlsSalvas = archive.getArchivedUrls();
+    urlsSalvas.forEach(url => {
+        console.log(`🔗 ${url.originalUrl} → ${url.archiveUrl}`);
+    });
+}
+
+arquivarSites();
+```
+
+### 💻 **Como CLI**
+Perfeito para uso direto e automação:
+
+```bash
+# Arquivamento de arquivo
+rav-archive file lista.txt
+
+# URL única
+rav-archive url https://exemplo.com
+
+# Múltiplas URLs
+rav-archive batch https://site1.com,https://site2.com,https://site3.com
+
+# Verificação
+rav-archive check https://exemplo.com
+
+# Estatísticas
+rav-archive stats
+
+# Ajuda completa
+rav-archive --help
+```
+
+---
+
+## 📊 Resultados e Relatórios
+
+### 🎯 **Saída em Tempo Real**
+```text
+📊 [5/10] https://exemplo.com
+🔄 Tentativas: 1/4
+📈 Progresso: 5/10 | ✅ 3 | ❌ 2 | 50.0%
+⏱️  Tempo: 45s decorridos | ~45s restantes
+```
+
+### 📄 **Relatório Final**
+```text
+RELATÓRIO DE ARQUIVAMENTO - RAV ARCHIVE
+============================================================
+Data de geração: 15/12/2024 14:30:25
+Total de URLs processadas: 10
+URLs arquivadas com sucesso: 8
+Falhas: 2
+Taxa de sucesso: 80.0%
+```
+
+### 📁 **Estrutura de Saída**
+```text
+📁 DADOS/
+└── 📄 archive_results.json    # Resultados estruturados
+
+📁 DOCS/
+└── 📄 relatorio_2024-12-15T143025Z.txt  # Relatório formatado
+```
+
+## ⚙️ Configuração
+
+### 🔧 **Configuração Customizada**
+```javascript
+const archive = new RavArchive({
+    browser: {
+        headless: true,           // Modo headless
+        timeout: 60000,           // Timeout de 60s
+    },
+    wayback: {
+        baseDelay: 10000,         // Delay base de 10s
+        maxAttemptsPerUrl: 4,     // Máximo de tentativas
+        maxRetries: 2             // Retries por falha
+    },
+    directories: {
+        data: 'DADOS',           // Pasta de dados
+        docs: 'RELATORIOS'       // Pasta de relatórios
+    }
+});
+```
+
+### 📝 **Formato do links.txt**
+```text
+# URLs válidas (uma por linha)
+https://exemplo.com
+https://site.com/pagina
+http://outro-site.com/artigo
+
+# Evite:
+exemplo.com                    # ❌ Sem protocolo
+javascript:void(0)             # ❌ URL inválida
+                               # ❌ Linha vazia
+```
 
 ---
 
 ## 📁 Estrutura de Arquivos
 
-```
-📁 rav-archive-save/
-├── 📄 archive.js                    # [OBRIGATÓRIO]
-├── 📦 package.json                  # [OBRIGATÓRIO]
-├── 📖 README.md                     # [OPCIONAL]
-├── ⚡ iniciar.bat                   # [EXECUTÁVEL]
-├── 📝 links.txt                     # [EDITÁVEL]
-├── 🖼️ RavArchive.gif                # [OPCIONAL]
-├── 📁 core/                         # [OBRIGATÓRIO]
-│   ├── 📄 AutoInstaller.js          # [OBRIGATÓRIO]
-│   ├── 📄 ConnectionManager.js      # [OBRIGATÓRIO]
-│   └── 📄 SmartArchiveChecker.js    # [OBRIGATÓRIO]
-├── 📁 DOCS/                         # [GERADO AUTOMATICAMENTE]
-│   └── 📄 relatorio_[data].txt      # [GERADO AUTOMATICAMENTE]
-└── 📁 DADOS/                        # [GERADO AUTOMATICAMENTE]
-    └── 📄 archive_results.json      # [GERADO AUTOMATICAMENTE]
+```text
+📁 rav-archive/
+├── 📄 package.json                     # Configuração NPM
+├── 📄 README.md                        # Documentação
+├── 📄 LICENSE                          # Licença MIT
+├── ⚡ iniciar.bat                      # Launcher Windows
+├── 📝 links.txt                        # URLs exemplo
+├── 🖼️ rav-archive.gif                  # Demonstração
+├── 📁 src/                             # Código fonte
+│   ├── 📄 index.js                     # Ponto de entrada (Lib)
+│   ├── 📄 cli.js                       # Ponto de entrada (CLI)
+│   ├── 📁 bin/                         # Executáveis
+│   │   └── 📄 rav-archive.js           # CLI global
+│   ├── 📁 core/                        # Núcleo principal
+│   │   ├── 📄 AutoInstaller.js         # Setup automático
+│   │   ├── 📄 ConnectionManager.js     # Gerenciamento conexão
+│   │   └── 📄 SmartArchiveChecker.js   # Lógica arquivamento
+│   ├── 📁 commands/                    # Comandos CLI
+│   │   ├── 📄 file.js                  # Arquivo → URLs
+│   │   ├── 📄 url.js                   # URL única
+│   │   ├── 📄 batch.js                 # Múltiplas URLs
+│   │   ├── 📄 check.js                 # Verificação
+│   │   └── 📄 stats.js                 # Estatísticas
+│   ├── 📁 config/                      # Configurações
+│   │   ├── 📄 default.js               # Config padrão
+│   │   ├── 📄 colors.js                # Cores console
+│   │   └── 📄 constants.js             # Constantes
+│   └── 📁 utils/                       # Utilitários
+│       ├── 📄 logger.js                # Logging
+│       ├── 📄 validator.js             # Validação
+│       └── 📄 file-manager.js          # Gerenciamento arquivos
+├── 📁 DOCS/                            # [GERADO]
+│   └── 📄 relatorio_[data].txt         # Relatórios
+└── 📁 DADOS/                           # [GERADO]
+    └── 📄 archive_results.json         # Resultados JSON
 ```
 
 ---
 
-## 🛠️ Comandos Disponíveis
+## 🏗️ Arquitetura
 
-### ▶️ Execução Básica
-```
-iniciar.bat
+### 🔄 **Fluxo de Processamento**
+1. **Setup** → Instala dependências automaticamente
+2. **Validação** → Verifica URLs e conexão
+3. **Verificação** → Checa URLs já arquivadas
+4. **Arquivamento** → Processa URLs novas
+5. **Relatório** → Gera resultados e estatísticas
+
+### 🎯 **Design Patterns**
+- **Modular** → Componentes independentes
+- **Configurável** → Customização flexível
+- **Extensível** → Fácil adição de features
+- **Robusto** → Tratamento completo de erros
+
+---
+
+## 🐛 Troubleshooting
+
+### ❌ **Problemas Comuns**
+```bash
+# Erro: Cannot find module 'playwright'
+# Solução: Execute novamente (instala automaticamente)
+rav-archive file links.txt
+
+# Erro: Navigation timeout
+# Solução: Verifique conexão internet
+ping 8.8.8.8
+
+# Erro: Invalid URL
+# Solução: Verifique formato no links.txt
+cat links.txt
 ```
 
-### 🔍 Verificação Manual
-```
-node archive.js
-```
+### 🔧 **Comandos de Diagnóstico**
+```bash
+# Verificar instalação
+node --version
+npm list rav-archive
 
-### 🧹 Limpeza de Cache
-```
+# Testar conexão
+npx playwright test
+
+# Limpar cache
 npx playwright install
 ```
 
 ---
 
-## 📝 Configuração do links.txt
-
-### Formato Correto:
-```
-https://site1.com
-https://site2.com/pagina
-http://site3.com/artigo
-```
-
-### ❌ Evite:
-- URLs malformadas
-- Linhas vazias
-- Caracteres especiais desnecessários
-
----
-
-## ⚙️ Requisitos do Sistema
-
-### Mínimos:
-- Windows 10/11
-- Node.js 16.0 ou superior
-- 2GB de RAM livre
-- Conexão internet estável
-
-### Recomendados:
-- Node.js 18.0+
-- 4GB RAM livre
-- CPU multi-core
-- Banda larga >10Mbps
-
----
-
-## 🆘 Troubleshooting
-
-### ❌ Erro Comum: Dependências
-```
-Erro: Cannot find module 'playwright'
-Solução: Execute iniciar.bat novamente
-```
-
-### ❌ Erro: URLs Inválidas
-```
-Erro: Invalid URL format
-Solução: Verifique o formato no links.txt
-```
-
-### ❌ Erro: Timeout
-```
-Erro: Navigation timeout
-Solução: Verifique conexão internet
-```
- 
----
-
 ## 📄 Licença
 
-Este projeto está sob licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
+Este projeto está sob licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para detalhes completos.
+
+### ✅ **Permissões**
+- Uso comercial
+- Modificação
+- Distribuição
+- Uso privado
+
+### 📝 **Condições**
+- Atribuição obrigatória
+- Incluir licença original
+
+---
+
+## 🙋 FAQ Rápido
+
+<details>
+<summary>📥 Preciso instalar algo manualmente?</summary>
+
+**Não!** O RAV Archive instala todas as dependências automaticamente na primeira execução.
+</details>
+
+<details>
+<summary>🌐 Posso usar com VPN?</summary>
+
+**Sim!** É até recomendado para evitar limites de rate limiting do Wayback Machine.
+</details>
+
+<details>
+<summary>📊 Quantas URLs posso processar?</summary>
+
+**Centenas**, mas recomenda-se processar em lotes de 50-100 URLs com intervalos.
+</details>
+
+<details>
+<summary>🔄 E se alguma URL falhar?</summary>
+
+O sistema faz **até 4 tentativas** com retry automático antes de marcar como falha.
+</details>
 
 ---
 
 <div align="center">
 
-**Feito com 💚 por RavenaStar**
+## 💚 Desenvolvido com paixão por [RavenaStar](https://github.com/ravenastar-js)
+
+**Preservando a web, uma URL de cada vez** 🌐
 
 [⬆ Voltar ao topo](#-rav-archive)
 
