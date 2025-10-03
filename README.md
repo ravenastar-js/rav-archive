@@ -53,15 +53,11 @@ O **RAV Archive** é uma ferramenta completa para arquivamento automático de UR
 </details>
 
 ```bash
-# Como biblioteca no seu projeto
-npm install rav-archive
+npm i -g rav-archive           # ✅ Recomendado
+npm install -g rav-archive     # ✅ Completo
 
-# Como CLI global
-npm install -g rav-archive
-
-# Ou baixe direto (sem Node.js)
-curl -L -o rav-archive.zip https://github.com/ravenastar-js/rav-archive/archive/refs/heads/save.zip
-tar -xf rav-archive.zip && cd rav-archive
+# Após instalação, use em qualquer lugar:
+rav-archive --help
 ```
 
 ## 🔍 VERIFICAR INSTALAÇÃO
