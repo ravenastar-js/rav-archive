@@ -3,6 +3,8 @@
 <a href="https://www.npmjs.com/package/rav-archive" target="_blank"><img src="https://img.shields.io/badge/-rav--archive-c40404?style=flat-square&labelColor=c40404&logo=npm&logoColor=white&link=https://www.npmjs.com/package/rav-archive" height="40" /></a>  
  <a href="https://www.npmjs.com/package/rav-archive" target="_blank"><img alt="NPM Version" src="https://img.shields.io/npm/v/rav-archive?style=flat-square&logo=npm&labelColor=c40404&color=c40404" height="40" ></a>
 
+---
+
 # 🤖 Rav Archive
 ### ✨ Arquivamento automático com 🌐 Playwright e 🕰️ Wayback Machine 
 
