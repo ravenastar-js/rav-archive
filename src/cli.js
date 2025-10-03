@@ -13,7 +13,7 @@ const { version } = require('../package.json');
  */
 function main() {
     const args = process.argv.slice(2);
-    
+
     // ❓ Mostrar ajuda se não há argumentos ou se pede ajuda
     if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
         showBanner();

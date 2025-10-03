@@ -4,7 +4,6 @@ const { URL } = require('url');
 const ConnectionManager = require('./ConnectionManager');
 const { version } = require('../../package.json');
 
-
 /**
  * 🧠 Núcleo inteligente de arquivamento com múltiplas estratégias
  * @class SmartArchiveChecker
@@ -864,6 +863,26 @@ class SmartArchiveChecker {
         const startTime = Date.now();
 
         try {
+            // 🔍 Verificar se há links para processar
+            if (!links || links.length === 0) {
+                this.printWarning('Nenhuma URL válida para processar');
+                this.results.metadata.status = "completed";
+                return this.results;
+            }
+
+            this.results.metadata.summary.total = links.length;
+            this.results.metadata.summary.pending = links.length;
+            this.progressLog.metadata.totalUrls = links.length;
+
+            // 📝 Inicializar tentativas para cada URL
+            links.forEach(url => {
+                this.urlAttempts.set(url, {
+                    wayback: 0,
+                    lastAttempt: null,
+                    success: false
+                });
+            });
+
             for (let i = 0; i < links.length; i++) {
                 if (limitReached) break;
 
@@ -919,6 +938,7 @@ class SmartArchiveChecker {
         } catch (error) {
             this.results.metadata.status = "error";
             this.printError('Erro crítico:', error.message);
+            console.error('Detalhes do erro:', error);
         } finally {
             if (this.browser) {
                 await this.browser.close();
@@ -930,6 +950,7 @@ class SmartArchiveChecker {
 
         return this.results;
     }
+
 
     /**
      * 📋 Gera relatório final
@@ -972,8 +993,8 @@ class SmartArchiveChecker {
     }
 
     /**
-     * 📄 Cria relatório em texto
-     */
+  * 📄 Cria relatório em texto
+  */
     createTextReport() {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const reportPath = path.join(this.docsDir, `relatorio_${timestamp}.txt`);
@@ -993,29 +1014,26 @@ class SmartArchiveChecker {
         reportContent += 'URLS ARQUIVADAS COM SUCESSO:\n';
         reportContent += '-'.repeat(60) + '\n\n';
 
-        const successfulUrls = Array.from(this.urlAttempts.entries())
-            .filter(([_, attempts]) => attempts.success)
-            .map(([url, _]) => url);
-
-        successfulUrls.forEach((url, index) => {
-            const waybackUrl = this.progressLog.archives[url]?.archives;
-            reportContent += `${index + 1}. ${url}\n`;
-            reportContent += `🔗 ${waybackUrl || 'Link não disponível'}\n\n`;
-        });
+        if (this.results.results.archived && this.results.results.archived.length > 0) {
+            this.results.results.archived.forEach((entry, index) => {
+                reportContent += `${index + 1}. ${entry.originalUrl}\n`;
+                reportContent += `🔗 ${entry.archiveUrl || 'Link não disponível'}\n\n`;
+            });
+        } else {
+            reportContent += 'Nenhuma URL arquivada com sucesso.\n\n';
+        }
 
         if (this.results.metadata.summary.failed > 0) {
             reportContent += '-'.repeat(60) + '\n';
             reportContent += 'URLS COM FALHA NO ARQUIVAMENTO:\n';
             reportContent += '-'.repeat(60) + '\n\n';
 
-            const failedUrls = Array.from(this.urlAttempts.entries())
-                .filter(([_, attempts]) => !attempts.success)
-                .map(([url, _]) => url);
-
-            failedUrls.forEach((url, index) => {
-                reportContent += `${index + 1}. ${url}\n`;
-                reportContent += `❌ Falha no arquivamento\n\n`;
-            });
+            if (this.results.results.failed && this.results.results.failed.length > 0) {
+                this.results.results.failed.forEach((entry, index) => {
+                    reportContent += `${index + 1}. ${entry.originalUrl}\n`;
+                    reportContent += `❌ ${entry.error?.message || 'Falha no arquivamento'}\n\n`;
+                });
+            }
         }
 
         reportContent += '-'.repeat(60) + '\n';
@@ -1024,6 +1042,25 @@ class SmartArchiveChecker {
 
         fs.writeFileSync(reportPath, reportContent, 'utf8');
         this.printSuccess(`Relatório em texto salvo: relatorio_${timestamp}.txt`);
+    }
+
+    /**
+     * 🎯 Mostra resumo executivo
+     */
+    showSummary() {
+        const successfulUrls = this.results.results.archived || [];
+
+        console.log(`\n🎯 RESUMO EXECUTIVO:`);
+        console.log(`├── URLs arquivadas: ${successfulUrls.length}`);
+        console.log(`└── Taxa de sucesso: ${((successfulUrls.length / this.results.metadata.summary.total) * 100).toFixed(1)}%`);
+
+        if (successfulUrls.length > 0) {
+            console.log(`\n📋 Primeiras URLs arquivadas:`);
+            successfulUrls.slice(0, 3).forEach(entry => {
+                console.log(`   ▪ ${entry.originalUrl}`);
+                if (entry.archiveUrl) console.log(`     🔵 ${entry.archiveUrl}`);
+            });
+        }
     }
 
     /**
@@ -1049,9 +1086,9 @@ class SmartArchiveChecker {
     }
 
     /**
-     * 📊 Obtém estatísticas do processamento
-     * @returns {Object} Estatísticas do arquivamento
-     */
+  * 📊 Obtém estatísticas do processamento
+  * @returns {Object} Estatísticas do arquivamento
+  */
     getStatistics() {
         // 📭 Se não há resultados, retornar estatísticas vazias
         if (!this.results || !this.results.metadata || this.results.metadata.summary.total === 0) {
@@ -1063,13 +1100,13 @@ class SmartArchiveChecker {
             };
         }
 
+        const successfulUrls = (this.results.results.archived || []).map(entry => entry.originalUrl);
+
         return {
             summary: this.results.metadata.summary,
             status: this.results.metadata.status,
             timestamp: this.results.metadata.timestamp,
-            successfulUrls: Array.from(this.urlAttempts.entries())
-                .filter(([_, attempts]) => attempts.success)
-                .map(([url, _]) => url)
+            successfulUrls: successfulUrls
         };
     }
 
