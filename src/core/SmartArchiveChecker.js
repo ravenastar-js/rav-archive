@@ -576,11 +576,11 @@ class SmartArchiveChecker {
     }
 
     /**
-     * 💾 Tenta arquivar URL no Wayback Machine
-     * @param {string} url - URL a arquivar
-     * @param {number} retryCount - Contador de tentativas
-     * @returns {Promise<Object>} Resultado do arquivamento
-     */
+   * 💾 Tenta arquivar URL no Wayback Machine
+   * @param {string} url - URL a arquivar
+   * @param {number} retryCount - Contador de tentativas
+   * @returns {Promise<Object>} Resultado do arquivamento
+   */
     async tryArchiveUrl(url, retryCount = 0) {
         const attempts = this.urlAttempts.get(url);
 
@@ -600,18 +600,20 @@ class SmartArchiveChecker {
 
         const page = await this.browser.newPage();
 
+        // 📝 DECLARAR logEntry FORA do bloco try para que esteja acessível no catch
+        const logEntry = {
+            timestamp: new Date().toISOString(),
+            service: 'wayback',
+            url: url,
+            attempt: attempts.wayback,
+            details: {}
+        };
+
         try {
+            // 🌐 Configurar userAgent
             await page.setExtraHTTPHeaders({
                 'User-Agent': this.config.browser.userAgent
             });
-
-            const logEntry = {
-                timestamp: new Date().toISOString(),
-                service: 'wayback',
-                url: url,
-                attempt: attempts.wayback,
-                details: {}
-            };
 
             this.printSection('WAYBACK MACHINE', url);
             this.printMessage('📊', `Tentativa ${attempts.wayback}/${this.config.wayback.maxAttemptsPerUrl}`);
@@ -661,6 +663,11 @@ class SmartArchiveChecker {
 
                 this.updateProgressLog(url, snapshotUrl);
                 await page.close();
+
+                // 💾 SALVAR LOG APÓS SUCESSO
+                this.detailedLogs.push(logEntry);
+                this.saveIncrementalReport();
+
                 return { success: true, snapshotUrl: snapshotUrl };
             }
 
@@ -672,6 +679,11 @@ class SmartArchiveChecker {
 
                 this.updateProgressLog(url, currentUrl);
                 await page.close();
+
+                // 💾 SALVAR LOG APÓS SUCESSO
+                this.detailedLogs.push(logEntry);
+                this.saveIncrementalReport();
+
                 return { success: true, snapshotUrl: currentUrl };
             }
 
@@ -690,6 +702,11 @@ class SmartArchiveChecker {
 
                     this.updateProgressLog(url, newUrl);
                     await page.close();
+
+                    // 💾 SALVAR LOG APÓS SUCESSO
+                    this.detailedLogs.push(logEntry);
+                    this.saveIncrementalReport();
+
                     return { success: true, snapshotUrl: newUrl };
                 }
             }
@@ -702,6 +719,10 @@ class SmartArchiveChecker {
             logEntry.error = error.message;
 
             this.printError(`Erro: ${error.message}`);
+
+            // 💾 SALVAR LOG APÓS ERRO (ANTES de fazer retry)
+            this.detailedLogs.push(logEntry);
+            this.saveIncrementalReport();
 
             if (error.message === 'LIMITE_ATINGIDO') {
                 return {
@@ -730,9 +751,6 @@ class SmartArchiveChecker {
                     code: "ARCHIVE_ERROR"
                 }
             };
-        } finally {
-            this.detailedLogs.push(logEntry);
-            this.saveIncrementalReport();
         }
     }
 
