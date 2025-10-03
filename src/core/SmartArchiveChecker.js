@@ -399,10 +399,10 @@ class SmartArchiveChecker {
     }
 
     /**
-     * 🔍 Verifica se URL já está arquivada
-     * @param {string} url - URL a verificar
-     * @returns {Promise<Object>} Resultado da verificação
-     */
+  * 🔍 Verifica se URL já está arquivada
+  * @param {string} url - URL a verificar
+  * @returns {Promise<Object>} Resultado da verificação
+  */
     async checkIfArchived(url) {
         // 🖥️ Garantir que o navegador está inicializado
         if (!this.browser) {
@@ -517,10 +517,10 @@ class SmartArchiveChecker {
     }
 
     /**
-     * 🔄 Método alternativo de verificação
-     * @param {string} url - URL a verificar
-     * @returns {Promise<Object>} Resultado da verificação
-     */
+   * 🔄 Método alternativo de verificação
+   * @param {string} url - URL a verificar
+   * @returns {Promise<Object>} Resultado da verificação
+   */
     async alternativeCheck(url) {
         const page = await this.browser.newPage();
 
@@ -863,10 +863,10 @@ class SmartArchiveChecker {
     }
 
     /**
-     * 🔄 Processa lista de URLs
-     * @param {string[]} links - Array de URLs
-     * @returns {Promise<Object>} Resultados do processamento
-     */
+   * 🔄 Processa lista de URLs
+   * @param {string[]} links - Array de URLs
+   * @returns {Promise<Object>} Resultados do processamento
+   */
     async processUrls(links, options = {}) {
         const {
             forceArchive = true,
@@ -915,57 +915,27 @@ class SmartArchiveChecker {
                 this.printProgress(i + 1, links.length, url, attempts.wayback);
 
                 try {
-                    let shouldArchive = true;
-                    let existingSnapshot = null;
+                    // 🔄 SEMPRE arquivar, independente de snapshot existente
+                    this.printMessage('🔄', 'Iniciando arquivamento...');
 
-                    if (checkExisting && !forceArchive) {
-                        const checkResult = await this.checkIfArchived(url);
+                    const archiveResult = await this.tryArchiveUrl(url);
 
-                        if (checkResult.archived) {
-                            existingSnapshot = checkResult.snapshotUrl;
-                            const snapshotDate = this.extractSnapshotDate(existingSnapshot);
-                            const today = new Date().toISOString().split('T')[0];
-
-                            if (snapshotDate === today) {
-                                // ✅ Snapshot de hoje - considerar como sucesso
-                                this.updateResults(url, {
-                                    archived: true,
-                                    snapshotUrl: existingSnapshot,
-                                    existing: true
-                                });
-                                this.updateProgressLog(url, existingSnapshot);
-                                this.printSuccess('URL já arquivada HOJE!');
-                                shouldArchive = false;
-                            } else {
-                                // 📅 Snapshot antigo - perguntar ou arquivar
-                                this.printWarning(`Snapshot existente de ${snapshotDate} (hoje é ${today})`);
-                                shouldArchive = true;
-                            }
-                        }
-                    }
-
-                    if (shouldArchive) {
-                        if (existingSnapshot) {
-                            this.printMessage('🔄', 'Arquivando novamente (snapshot antigo)...');
-                        }
-
-                        const archiveResult = await this.tryArchiveUrl(url);
-
-                        if (archiveResult.success) {
-                            this.updateResults(url, archiveResult);
-                            this.printSuccess('Arquivado com sucesso!');
-                        } else if (archiveResult.limitReached) {
-                            this.updateResults(url, archiveResult);
-                            this.printError('Limite diário atingido!');
-                            limitReached = true;
-                        } else {
-                            this.updateResults(url, archiveResult);
-                            this.printError(`Falha: ${archiveResult.error?.message}`);
-                        }
+                    if (archiveResult.success) {
+                        this.updateResults(url, archiveResult);
+                        this.printSuccess('Arquivado com sucesso!');
+                    } else if (archiveResult.limitReached) {
+                        this.updateResults(url, archiveResult);
+                        this.printError('Limite diário atingido!');
+                        limitReached = true;
+                    } else {
+                        this.updateResults(url, archiveResult);
+                        this.printError(`Falha: ${archiveResult.error?.message}`);
                     }
 
                 } catch (error) {
                     this.printError(`Erro ao processar URL: ${error.message}`);
+
+                    // 📝 Usar updateResults para capturar a URL mesmo em caso de erro
                     this.updateResults(url, {
                         success: false,
                         error: {
