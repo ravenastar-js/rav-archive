@@ -297,7 +297,12 @@ class SmartArchiveChecker {
         }
     }
 
-    async checkIfArchived(url) {
+       async checkIfArchived(url) {
+
+        if (!this.browser) {
+            await this.initBrowser();
+        }
+
         let retries = 0;
 
         while (retries < this.config.wayback.maxRetries) {

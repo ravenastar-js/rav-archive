@@ -68,6 +68,10 @@ class RavArchive {
     async checkArchived(url) {
         try {
             await AutoInstaller.setupEnvironment();
+
+            if (!this.checker.browser) {
+                await this.checker.initBrowser();
+            }
             const result = await this.checker.checkIfArchived(url);
             return result;
         } catch (error) {
