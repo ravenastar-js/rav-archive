@@ -44,9 +44,14 @@ O **RAV Archive** é uma ferramenta completa para arquivamento automático de UR
 
 ---
 
-## 🚀 Começando em 30 Segundos
+## 📦 Instalação Rápida
 
-### 📥 **Instalação Rápida**
+<details>
+<summary>📥 Como instalar o NodeJS?</summary>
+
+- [COMO INSTALAR NODE JS NO WINDOWS?](https://youtu.be/-jft_9PlffQ)
+</details>
+
 ```bash
 # Como biblioteca no seu projeto
 npm install rav-archive
@@ -59,7 +64,22 @@ curl -L -o rav-archive.zip https://github.com/ravenastar-js/rav-archive/archive/
 tar -xf rav-archive.zip && cd rav-archive
 ```
 
+## 🔍 VERIFICAR INSTALAÇÃO
+```bash
+npm ls -g rav-archive        # ✅ Listar pacote
+npm list -g rav-archive       # ✅ Completo
+rav-archive --version         # ✅ Versão instalada
+```
+
+## 🗑️ DESINSTALAR GLOBALMENTE
+```bash
+npm un -g rav-archive         # ✅ Recomendado  
+npm uninstall -g rav-archive  # ✅ Completo
+npm remove -g rav-archive     # ✅ Alternativo
+```
+
 ### 🛠️ **Uso Imediato**
+
 ```javascript
 // Como biblioteca
 const { RavArchive } = require('rav-archive');
