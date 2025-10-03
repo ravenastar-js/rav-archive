@@ -323,8 +323,6 @@ javascript:void(0)             # ❌ URL inválida
 ├── 📁 src/                             # Código fonte
 │   ├── 📄 index.js                     # Ponto de entrada (Lib)
 │   ├── 📄 cli.js                       # Ponto de entrada (CLI)
-│   ├── 📁 bin/                         # Executáveis
-│   │   └── 📄 rav-archive.js           # CLI global
 │   ├── 📁 core/                        # Núcleo principal
 │   │   ├── 📄 AutoInstaller.js         # Setup automático
 │   │   ├── 📄 ConnectionManager.js     # Gerenciamento conexão

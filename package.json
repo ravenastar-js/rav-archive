@@ -2,17 +2,15 @@
   "name": "rav-archive",
   "version": "1.0.0-6",
   "description": "📦✨ Biblioteca para arquivamento automático de URLs no Wayback Machine usando Playwright",
-  "main": "src/index.js",
+  "main": "src/cli.js",
   "bin": {
-    "rav-archive": "src/bin/rav-archive.js"
+    "rav-archive": "src/cli.js"
   },
   "scripts": {
     "start": "node src/cli.js",
     "cli": "node src/cli.js",
-    "dev": "node src/cli.js --debug",
-    "test": "node test.js",
-    "install-deps": "npx playwright install chromium",
-    "prepublishOnly": "npm run install-deps"
+    "help": "node src/cli.js --help",
+    "test": "node src/cli.js --version"
   },
   "keywords": [
     "archive",
