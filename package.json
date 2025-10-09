@@ -13,14 +13,15 @@
     "test": "node src/cli.js --version"
   },
   "keywords": [
+    "osint",
     "archive",
+    "ravenastar",
     "wayback-machine",
     "playwright",
     "automation",
     "web-preservation",
     "internet-archive",
-    "url-saver",
-    "ravenastar"
+    "url-saver"
   ],
   "author": "ravenastar-js",
   "license": "MIT",
